@@ -1,4 +1,10 @@
 __author__ = 'brad'
 
-import engine.coordinatesurface
-from engine.coordinatesurface import CoordinateSurface
+# Import engine files
+import coordsurface
+import state
+
+
+# Import engine level classes
+from coordsurface import CoordinateSurface
+from state import State
