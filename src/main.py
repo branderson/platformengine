@@ -13,7 +13,6 @@ USE_WAIT = True
 MAX_FRAME_SKIP = 0
 UPDATE_CALLBACK = None
 FRAME_CALLBACK = None
-USE_PREDICTION = True
 CLOCK_SETTINGS = (TICKS_PER_SECOND, MAX_FPS, USE_WAIT, MAX_FRAME_SKIP, UPDATE_CALLBACK, FRAME_CALLBACK)
 
 
@@ -36,8 +35,8 @@ def main():
 
 
 def run_game():
-    global sprite_group, game_ticks
-    sprite_group = None
+    global screen, game_surface, sprite_group, game_ticks, clock
+    sprite_group = pygame.sprite.Group()
     game_ticks = 0
 
     # Game loop
@@ -59,7 +58,7 @@ def run_game():
 
 def update_clock():
         """Update function for use with GameClock."""
-        global game_ticks
+        global game_ticks, clock
 
         # sprite_group.clear(screen)  # , eraser_image)
         # sprite_group.update(USE_PREDICTION)
@@ -71,7 +70,8 @@ def update_clock():
 
 
 def draw_game():
-    # sprite_group.draw(screen)
+    global sprite_group, screen
+    sprite_group.draw(screen)
     return
 
 
