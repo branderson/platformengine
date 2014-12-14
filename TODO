@@ -1,0 +1,9 @@
+Implement clock
+Implement state
+Implement coordinate plane
+    Allow coordinates to hold multiple objects (change values to lists of pointers, instead of pointers)
+Implement base object
+Implement sprite sheet reading
+    Basic implementation finished
+    Add methods for spacing between sprites, strips that are multiple lines, etc
+Implement resource dictionaries

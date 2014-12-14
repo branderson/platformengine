@@ -1,20 +1,22 @@
 __author__ = 'brad'
 
 import pygame
+import math
 
 
-class CoordinateSurface(object, pygame.Surface):
+class CoordinateSurface(pygame.Surface):
     coordinate_array = {}
     coordinate_width = 0
     coordinate_height = 0
 
-    def __init__(self, rect, coordinate_width, coordinate_height):
-        pygame.Surface.__init__(self, (rect.width, rect.height))
+    def __init__(self, rect, (coordinate_width, coordinate_height)):
+        try:
+            pygame.Surface.__init__(self, (rect.width, rect.height))
+        except:
+            pygame.Surface.__init__(self, (rect[0], rect[1]))
+
         self.coordinate_width = coordinate_width
         self.coordinate_height = coordinate_height
-
-        # Initialize two dimensional list of pointers (consider using dictionary or numpy instead)
-        # coordinate_array = [[None for y in range(coordinate_height)] for x in range(coordinate_width)]
 
     def insert_object(self, game_object, (x_coordinate, y_coordinate)):
         if x_coordinate > self.coordinate_width or y_coordinate > self.coordinate_height:
@@ -48,3 +50,23 @@ class CoordinateSurface(object, pygame.Surface):
         for key in self.coordinate_array.keys():
             if key == game_object:
                 return key
+
+    # Convert screen coordinates to game coordinates
+    def convert_to_surface_coordinates(self, (x_coordinate, y_coordinate)):
+        if x_coordinate > self.get_width() or y_coordinate > self.get_height():
+            print("Cannot  enter values greater than size of surface")
+            return
+        game_x_coordinate = (float(self.coordinate_width)/float(self.get_width()))*x_coordinate
+        game_y_coordinate = (float(self.coordinate_height)/float(self.get_height()))*y_coordinate
+        print(str(game_x_coordinate) + " " + str(game_y_coordinate))
+        return game_x_coordinate, game_y_coordinate
+
+    # Convert game coordinates to screen coordinates
+    def convert_to_screen_coordinates(self, (x_coordinate, y_coordinate)):
+        if x_coordinate > self.coordinate_width or y_coordinate > self.coordinate_height:
+            print("Cannot  enter values greater than coordinate size of surface")
+            return
+        screen_x_coordinate = (float(self.get_width())/float(self.coordinate_width))*x_coordinate
+        screen_y_coordinate = (float(self.get_height())/float(self.coordinate_height))*y_coordinate
+        print(str(screen_x_coordinate) + " " + str(screen_y_coordinate))
+        return screen_x_coordinate, screen_y_coordinate
