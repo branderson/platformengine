@@ -11,4 +11,4 @@ import gameobject
 from coordsurface import CoordinateSurface
 from state import State
 from gameclock import GameClock
-from gameobject import Object
+from gameobject import GameObject

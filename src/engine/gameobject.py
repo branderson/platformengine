@@ -1,7 +1,7 @@
 __author__ = 'brad'
 
 
-class GameObject:
+class GameObject(object):
     obtype = None
 
     def __init__(self):

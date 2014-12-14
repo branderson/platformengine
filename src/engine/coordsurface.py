@@ -3,7 +3,7 @@ __author__ = 'brad'
 import pygame
 
 
-class CoordinateSurface(pygame.Surface):
+class CoordinateSurface(object, pygame.Surface):
     coordinate_array = {}
     coordinate_width = 0
     coordinate_height = 0
@@ -37,3 +37,14 @@ class CoordinateSurface(pygame.Surface):
         else:
             return False
 
+    def move_object(self, game_object, (x_destination, y_destination)):
+        position = self.check_position(game_object)
+        # We're gonna need to refactor so that each coordinate is a list of objects
+        if True:
+            self.coordinate_array[(x_destination, y_destination)] = game_object
+            self.coordinate_array[position] = None
+
+    def check_position(self, game_object):
+        for key in self.coordinate_array.keys():
+            if key == game_object:
+                return key

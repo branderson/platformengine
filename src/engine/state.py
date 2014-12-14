@@ -1,7 +1,7 @@
 __author__ = 'brad'
 
 
-class State:
+class State(object):
     state = 0
 
     def __init__(self):
