@@ -1,7 +1,13 @@
 Implement clock
+    Should be done, not tested much yet though
 Implement state
 Implement coordinate plane
     Allow coordinates to hold multiple objects (change values to lists of pointers, instead of pointers)
+        Fixed
+        Append remove_object so that it can remove one at position or remove all at position
+        Move stuff in the actual surface
+        Implement layers by checking if layer is higher or lower than other layers in list. Then draw in order.
+            Account for overlap
 Implement base object
 Implement sprite sheet reading
     Basic implementation finished

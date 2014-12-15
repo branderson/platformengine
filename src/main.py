@@ -23,7 +23,7 @@ def main():
 
     # Set up the window
     screen = pygame.display.set_mode((640, 480))
-    game_surface = engine.CoordinateSurface(screen.get_rect(), 10, 10)
+    game_surface = engine.CoordinateSurface(screen.get_rect(), (10, 10))
     game_surface.fill((255, 255, 255))
     screen.blit(game_surface, screen.get_rect())
 
@@ -71,8 +71,11 @@ def update_clock():
 
 
 def draw_game():
-    global sprite_group, screen
-    sprite_group.draw(screen)
+    global sprite_group, game_surface, screen
+    game_surface.update()
+    game_surface.draw()
+    # sprite_group.draw(game_surface)
+    screen.blit(game_surface, screen.get_rect())
     return
 
 
