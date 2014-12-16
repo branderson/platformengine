@@ -32,3 +32,4 @@ for i in xrange(1, 10):
     surface.insert_object('object', (1, 1))
 while surface.remove_object('object'):
     print("Removed object")
+print(str(surface.x_stretch) + " " + str(surface.y_stretch))

@@ -8,6 +8,8 @@ Implement coordinate plane
         Move stuff in the actual surface
         Implement layers by checking if layer is higher or lower than other layers in list. Then draw in order.
             Account for overlap
+        Images are drawn the same size regardless of coordinate resolution. Need to resize based on quotient
+        Look into using video memory
 Implement base object
 Implement sprite sheet reading
     Basic implementation finished

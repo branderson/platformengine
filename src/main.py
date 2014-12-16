@@ -6,6 +6,10 @@ import engine
 from pygame.locals import *
 
 # Set up constants
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+COORDINATE_WIDTH = 1600
+COORDINATE_HEIGHT = 1200
 # Clock constants
 TICKS_PER_SECOND = 30.0
 MAX_FPS = 0
@@ -14,7 +18,7 @@ MAX_FRAME_SKIP = 0
 UPDATE_CALLBACK = None
 FRAME_CALLBACK = None
 CLOCK_SETTINGS = (TICKS_PER_SECOND, MAX_FPS, USE_WAIT, MAX_FRAME_SKIP, UPDATE_CALLBACK, FRAME_CALLBACK)
-RESOURCE_DIR = '../resources'
+RESOURCE_DIR = '../resources/'
 
 
 def main():
@@ -22,8 +26,8 @@ def main():
     pygame.init()
 
     # Set up the window
-    screen = pygame.display.set_mode((640, 480))
-    game_surface = engine.CoordinateSurface(screen.get_rect(), (10, 10))
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    game_surface = engine.CoordinateSurface(screen.get_rect(), (COORDINATE_WIDTH, COORDINATE_HEIGHT))
     game_surface.fill((255, 255, 255))
     screen.blit(game_surface, screen.get_rect())
 
@@ -45,6 +49,8 @@ def run_game():
         clock.tick()
         if clock.update_ready:
             update_clock()
+            game_surface.update_objects()
+
         if clock.frame_ready:
             # Draw functions
             draw_game()
@@ -73,7 +79,7 @@ def update_clock():
 def draw_game():
     global sprite_group, game_surface, screen
     game_surface.update()
-    game_surface.draw()
+    # game_surface.draw()
     # sprite_group.draw(game_surface)
     screen.blit(game_surface, screen.get_rect())
     return
