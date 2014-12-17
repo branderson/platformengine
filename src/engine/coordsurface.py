@@ -35,6 +35,11 @@ class CoordinateSurface(pygame.Surface):
             self.coordinate_array[coordinate] = [game_object]
         return True
 
+    def insert_object_centered(self, game_object, (x_coordinate, y_coordinate)):
+        adjusted_x = x_coordinate - game_object.rect_scaled.centerx
+        adjusted_y = y_coordinate - game_object.rect_scaled.centery
+        self.insert_object(game_object, (adjusted_x, adjusted_y))
+
     # Searches for object in coordinate_array and removes it if it exits, or finds at position and removes one
     # or removes all at position
     def remove_object(self, game_object=None):  # , (x_coordinate, y_coordinate)=None):

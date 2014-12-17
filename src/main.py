@@ -40,13 +40,14 @@ def main():
 
 
 def run_game():
-    global screen, game_surface, sprite_group, game_ticks, clock
+    global screen, game_surface, sprite_group, game_ticks, clock, switched
     sprite_group = pygame.sprite.Group()
     game_ticks = 0
 
     # Test code begin
     test1 = engine.GameObject(RESOURCE_DIR + '124.jpg')
-    game_surface.insert_object(test1, (800, 600))
+    game_surface.insert_object_centered(test1, (COORDINATE_WIDTH/2, COORDINATE_HEIGHT/2))
+    switched = False
     # Test code end
 
     # Game loop
@@ -91,7 +92,7 @@ def draw_game():
 
 
 def handle_event(event):
-    global screen, game_surface
+    global screen, game_surface, switched
     # Quit the game
     if event.type == QUIT:
         pygame.quit()
@@ -100,8 +101,14 @@ def handle_event(event):
     # Test code begin
     if event.type == KEYUP:
         if event.key == K_a:
-            screen = pygame.display.set_mode((100, 100))
-            game_surface.update_screen_coordinates((100, 100))
+            if switched:
+                screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+                game_surface.update_screen_coordinates((SCREEN_WIDTH, SCREEN_HEIGHT))
+                switched = False
+            else:
+                screen = pygame.display.set_mode((100, 100))
+                game_surface.update_screen_coordinates((100, 100))
+                switched = True
     # Test code end
     return
 

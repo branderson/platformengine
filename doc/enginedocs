@@ -5,6 +5,8 @@ Engine Documentation
 
             insert_object(game_object, (x_coordinate, y_coordinate))
 
+            insert_object_centered(game_object, (x_coordinate, y_coordinate))
+
             remove_object(game_object=None)
 
             clear()

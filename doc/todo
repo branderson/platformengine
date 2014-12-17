@@ -6,9 +6,11 @@ CoordinateSurface
     Implement layers by checking if layer is higher or lower than other layers in list. Then draw in order.
         Account for overlap
     Look into using video memory
+    Consider integrating insert_object_centered as a flag into insert_object
 GameObject
     Implement flip/rotate sprite
     Implement animation
+    Add get_center function
 Spritesheet
     Add methods for spacing between sprites, strips that are multiple lines, etc
 Implement resource dictionaries
