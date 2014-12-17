@@ -1,0 +1,122 @@
+Engine Documentation
+    coordsurface.py
+        CoordinateSurface(rect, (coordinate_width, coordinate_height))
+            Pygame Surface, with functions for manipulating objects in 2 dimensional coordinate grid
+
+            insert_object(game_object, (x_coordinate, y_coordinate))
+
+            remove_object(game_object=None)
+
+            clear()
+
+            bool check_collision((x_coordinate, y_coordinate))
+                Checks if GameObject exists at coordinates
+
+            check_collision_objects((x_coordinate, y_coordinate))
+                Returns list of objects at coordinates
+
+            move_object(game_object, (x_destination, y_destination))
+
+            increment_object(game_object, (x_increment, y_increment))
+
+            check_position(self, game_object)
+
+            convert_to_surface_coordinates((x_coordinate, y_coordinate))
+
+            convert_to_screen_coordinates((x_coordinate, y_coordinate))
+
+            update()
+
+            update_screen_coordinates(self, (width, height))
+
+    gameclock.py
+        GameClock(ticks_per_second=25, max_fps=0, use_wait=True, max_frame_skip=5,
+        update_callback=None, frame_callback=None, time_source=None)
+
+        Manage time in the following ways:
+
+        1. Run game engine at a constant speed, independent of variable frame rate.
+        2. Schedule items to coincide with tick(), update_ready, frame_ready, and
+           elapsed intervals.
+        3. Employ on-demand time dilation.
+
+        Parameters:
+            ticks_per_second -> Positive integer. Constant ticks per second for
+                game physics.
+            max_fps -> Positive integer. Max frames allowed per second. A value of
+                zero allows unlimited frames.
+            use_wait -> Boolean. When True, GameClock.tick() uses time.sleep to
+                throttle frames per second. This uses less CPU at the postential
+                cost of smoothness. When False, GameClock.tick() returns without
+                injecting any waits, and can result in smoother frames.
+            max_frame_skip -> Positive integer. Max game ticks allowed before
+                forcing a frame display.
+            update_callback -> Callable. Special callback to invoke when update is
+                ready.
+            frame_callback -> Callable. Special callback to invoke when frame is
+                ready.
+            time_source -> Callable. Custom time source, e.g.
+                lambda:pygame.time.get_ticks() / 1000.0.
+        Properties:
+            interpolate -> Read-only. Float (range 0 to 1) factor representing the
+                exact point in time between the previous and next ticks.
+            update_ready -> Read-only. Boolean indicating it is time to update the
+                game logic.
+            frame_ready -> Read-only. Boolean indicating it is time to update the
+                display.
+            dilation -> Read-write. Set the time dilation factor. Normal==1.0,
+                Slower>1.0, Faster<1.0. Affects DT and interval timers.
+            update_callback -> Read-write. The callback function to invoke at each
+                update_ready interval.
+            frame_callback -> Read-write. The callback function to invoke at each
+                frame_ready interval.
+            fps, frame_count, frame_elapsed -> Read-only. Most recent FPS,
+                cumulative frames posted during the current second, and time elapsed
+                in the previous frame, respectively.
+            ups, update_count, update_elapsed -> Read-only. Most recent updates per
+                second, cumulative updates posted during the current second, and
+                time elapsed in the previous update, respectively.
+            tps -> Read-only. Most recently measured tick() calls per second.
+            time -> Read-write. The value from the last poll of time source.
+            ticks_per_second -> Read-write. See parameter ticks_per_second.
+            max_fps -> Read-write. See parameter max_fps.
+            use_wait -> Read-write. See parameter use_wait.
+            max_frame_skip -> Read-write. See parameter max_frame_skip.
+        Methods:
+            tick() -> Game loop timer. Call once per game loop.
+            get_time() -> Return the milliseconds elapsed in the previous call to tick().
+            get_fps() -> Return the frame rate from the previous second.
+            get_ups() -> Return the update rate from the previous second.
+            schedule(), schedule_update(), schedule_update_priority(),
+                schedule_frame(), schedule_frame_priority(),
+                schedule_interval() -> Various scheduling facilities.
+            unschedule() -> Schedule removal.
+
+    gameobject.py
+        GameObject(filename=None, layer=0)
+            Creates new GameObject with filename loaded as image and layer set to input
+
+            destroy()
+                deletes the object (probably not necessary)
+
+            draw(surface)
+                draws the scaled image to the surface
+
+            scale(x_scale, y_scale)
+                scales the image by the x_scale and y_scale multipliers
+
+    spritesheet.py
+        Spritesheet(filename)
+            Loads a spritesheet from filename
+
+            image_at(rectangle, colorkey=None)
+                Loads image at rectangle, and returns it using colorkey
+
+            images_at(rectangle_list, colorkey=None)
+                Runs image_at for each rectangle in rectangle_list, returns list of images
+
+            load_strip(rect, image_count, colorkey=None)
+                Breaks rect up into a list of rects based on image_count, runs images_at for each rect and returns list
+
+    state.py
+        State()

@@ -132,9 +132,18 @@ class CoordinateSurface(pygame.Surface):
                 game_object.draw(self)
                 # self.draw_object(game_object)
 
+    def update_screen_coordinates(self, (width, height)):
+        pygame.Surface.__init__(self, (width, height))
+        self.x_scale = self.get_width()/float(self.coordinate_width)
+        self.y_scale = self.get_height()/float(self.coordinate_height)
+        for key in self.coordinate_array.keys():
+            for game_object in self.coordinate_array[key]:
+                game_object.scale(self.x_scale, self.y_scale)
+
     def update_objects(self):
         pass
 
+    # Deprecated
     def draw_object(self, game_object):
         self.blit(pygame.transform.scale(game_object.image, (int(game_object.image.get_width()*self.x_scale),
                                                              int(game_object.image.get_height()*self.y_scale))),

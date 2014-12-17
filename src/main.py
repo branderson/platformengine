@@ -44,6 +44,11 @@ def run_game():
     sprite_group = pygame.sprite.Group()
     game_ticks = 0
 
+    # Test code begin
+    test1 = engine.GameObject(RESOURCE_DIR + '124.jpg')
+    game_surface.insert_object(test1, (800, 600))
+    # Test code end
+
     # Game loop
     while True:
         clock.tick()
@@ -86,10 +91,18 @@ def draw_game():
 
 
 def handle_event(event):
+    global screen, game_surface
     # Quit the game
     if event.type == QUIT:
         pygame.quit()
         sys.exit()
+
+    # Test code begin
+    if event.type == KEYUP:
+        if event.key == K_a:
+            screen = pygame.display.set_mode((100, 100))
+            game_surface.update_screen_coordinates((100, 100))
+    # Test code end
     return
 
 if __name__ == '__main__':

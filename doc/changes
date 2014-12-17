@@ -1,0 +1,8 @@
+Up to Dec. 17
+    Clock implemented
+    CoordinateSurface implemented
+        Coordinate surface holds lists of pointers to objects
+        Able to resize to any screen resolution
+            Even on the fly!
+    GameObject implemented
+    Spritesheet implemented

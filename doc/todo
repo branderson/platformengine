@@ -1,0 +1,14 @@
+Implement clock
+    Should be done, not tested much yet though
+Implement state
+CoordinateSurface
+    Append remove_object so that it can remove one at position or remove all at position
+    Implement layers by checking if layer is higher or lower than other layers in list. Then draw in order.
+        Account for overlap
+    Look into using video memory
+GameObject
+    Implement flip/rotate sprite
+    Implement animation
+Spritesheet
+    Add methods for spacing between sprites, strips that are multiple lines, etc
+Implement resource dictionaries
