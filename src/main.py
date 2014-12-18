@@ -22,13 +22,15 @@ RESOURCE_DIR = '../resources/'
 
 
 def main():
-    global screen, game_surface, clock
+    global screen, game_surface, clock, scene
     pygame.init()
 
     # Set up the window
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     game_surface = engine.CoordinateSurface(screen.get_rect(), (COORDINATE_WIDTH, COORDINATE_HEIGHT))
-    game_surface.fill((255, 255, 255))
+    # game_surface.fill((255, 255, 255))
+    scene = engine.Scene((COORDINATE_WIDTH, COORDINATE_HEIGHT), (10000, 10000), (100, 100))
+    scene.views.append(game_surface)
     screen.blit(game_surface, screen.get_rect())
 
     # Set up the clock
@@ -40,13 +42,13 @@ def main():
 
 
 def run_game():
-    global screen, game_surface, sprite_group, game_ticks, clock, switched
+    global screen, game_surface, sprite_group, game_ticks, clock, switched, scene, test1
     sprite_group = pygame.sprite.Group()
     game_ticks = 0
 
     # Test code begin
     test1 = engine.GameObject(RESOURCE_DIR + '124.jpg')
-    game_surface.insert_object_centered(test1, (COORDINATE_WIDTH/2, COORDINATE_HEIGHT/2))
+    scene.insert_object(test1, (75, 75))
     switched = False
     # Test code end
 
@@ -83,8 +85,8 @@ def update_clock():
 
 
 def draw_game():
-    global sprite_group, game_surface, screen
-    game_surface.update()
+    global sprite_group, game_surface, screen, scene
+    scene.update()
     # game_surface.draw()
     # sprite_group.draw(game_surface)
     screen.blit(game_surface, screen.get_rect())
@@ -92,7 +94,7 @@ def draw_game():
 
 
 def handle_event(event):
-    global screen, game_surface, switched
+    global screen, game_surface, switched, scene, test1
     # Quit the game
     if event.type == QUIT:
         pygame.quit()
@@ -102,12 +104,13 @@ def handle_event(event):
     if event.type == KEYUP:
         if event.key == K_a:
             if switched:
-                screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-                game_surface.update_screen_coordinates((SCREEN_WIDTH, SCREEN_HEIGHT))
+                # screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+                # game_surface.update_screen_coordinates((SCREEN_WIDTH, SCREEN_HEIGHT))
                 switched = False
             else:
-                screen = pygame.display.set_mode((100, 100))
-                game_surface.update_screen_coordinates((100, 100))
+                # screen = pygame.display.set_mode((100, 100))
+                # game_surface.update_screen_coordinates((100, 100))
+                scene.remove_object(test1)
                 switched = True
     # Test code end
     return

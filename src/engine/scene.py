@@ -1,38 +1,29 @@
 __author__ = 'brad'
 
 import pygame
+from coordsurface import CoordinateSurface
 
-"""
-The CoordinateSurface is essentially a pygame Surface
-with a builtin secondary coordinate system, which operates
-irrespectively of the screen coordinates. It holds pointers
-to game objects and can manipulate those objects.
-"""
-class CoordinateSurface(pygame.Surface):
+
+class Scene(object):
     coordinate_array = {}
-    coordinate_width = 0
-    coordinate_height = 0
-    x_scale = 1.
-    y_scale = 1.
+    views = []
 
-    def __init__(self, rect, (coordinate_width, coordinate_height)):
-        # This part should be cleaned up
-        try:
-            pygame.Surface.__init__(self, (rect.width, rect.height))
-        except:
-            pygame.Surface.__init__(self, (rect[0], rect[1]))
-
-        self.coordinate_width = coordinate_width
-        self.coordinate_height = coordinate_height
-        self.x_scale = self.get_width()/float(coordinate_width)
-        self.y_scale = self.get_height()/float(coordinate_height)
+    def __init__(self, (view_width, view_height), (scene_width, scene_height), (view_x, view_y)):
+        # self.views.append(CoordinateSurface(rect, (view_width, view_height)))
+        self.scene_width = scene_width
+        self.scene_height = scene_height
+        self.view_x = view_x
+        self.view_y = view_y
+        self.view_rect = pygame.Rect((view_x, view_y), (view_width, view_height))
 
     def insert_object(self, game_object, (x_coordinate, y_coordinate)):
-        if x_coordinate > self.coordinate_width or y_coordinate > self.coordinate_height:
+        if x_coordinate > self.scene_width or y_coordinate > self.scene_height:
             return False
         else:
             coordinate = (x_coordinate, y_coordinate)
-            # game_object.scale(self.x_scale, self.y_scale)
+            game_object.rect.x = x_coordinate
+            game_object.rect.y = y_coordinate
+            game_object.scale(self.views[0].x_scale, self.views[0].y_scale)
 
         if coordinate in self.coordinate_array:
             self.coordinate_array[coordinate].append(game_object)
@@ -41,7 +32,9 @@ class CoordinateSurface(pygame.Surface):
         return True
 
     def insert_object_centered(self, game_object, (x_coordinate, y_coordinate)):
-        # game_object.scale(self.x_scale, self.y_scale)
+        game_object.rect.x = x_coordinate
+        game_object.rect.y = y_coordinate
+        game_object.scale(self.views[0].x_scale, self.views[0].y_scale)
         adjusted_x = x_coordinate - game_object.rect_scaled.centerx
         adjusted_y = y_coordinate - game_object.rect_scaled.centery
         self.insert_object(game_object, (adjusted_x, adjusted_y))
@@ -54,6 +47,8 @@ class CoordinateSurface(pygame.Surface):
         #     del self.coordinate_array[coordinate]
         # else:
         for key in self.coordinate_array.keys():
+            if self.views[0].check_position(game_object) is not None:
+                self.views[0].remove_object(game_object)
             if self.coordinate_array[key].count(game_object) > 0:
                 self.coordinate_array[key].remove(game_object)
                 if self.coordinate_array[key].__len__() == 0:
@@ -68,6 +63,9 @@ class CoordinateSurface(pygame.Surface):
     def clear(self):
         # Delete the objects as well
         for key in self.coordinate_array.keys():
+            for game_object in self.coordinate_array.keys():
+                if self.views[0].checkPosition(game_object) is not None:
+                    self.views[0].remove_object(game_object)
             del self.coordinate_array[key]
 
     def check_collision(self, (x_coordinate, y_coordinate)):
@@ -112,43 +110,41 @@ class CoordinateSurface(pygame.Surface):
         for key in self.coordinate_array.keys():
             if self.coordinate_array[key].count(game_object) > 0:
                 return key
-        return None
 
-    # Convert screen coordinates to game coordinates
-    def convert_to_surface_coordinates(self, (x_coordinate, y_coordinate)):
+    """def convert_to_view_coordinates(self, (x_coordinate, y_coordinate)):
         if x_coordinate > self.get_width() or y_coordinate > self.get_height():
             print("Cannot  enter values greater than size of surface")
             return
         game_x_coordinate = (float(self.coordinate_width)/float(self.get_width()))*x_coordinate
         game_y_coordinate = (float(self.coordinate_height)/float(self.get_height()))*y_coordinate
         # print(str(game_x_coordinate) + " " + str(game_y_coordinate))
-        return game_x_coordinate, game_y_coordinate
-
-    # Convert game coordinates to screen coordinates
-    def convert_to_screen_coordinates(self, (x_coordinate, y_coordinate)):
-        if x_coordinate > self.coordinate_width or y_coordinate > self.coordinate_height:
-            print("Cannot  enter values greater than coordinate size of surface")
-            return
-        screen_x_coordinate = (float(self.get_width())/float(self.coordinate_width))*x_coordinate
-        screen_y_coordinate = (float(self.get_height())/float(self.coordinate_height))*y_coordinate
-        # print(str(screen_x_coordinate) + " " + str(screen_y_coordinate))
-        return screen_x_coordinate, screen_y_coordinate
+        return game_x_coordinate, game_y_coordinate"""
 
     def update(self):
-        self.fill((255, 255, 255))
+        # self.view_rect = pygame.Rect((self.views[0].
+        self.views[0].clear()
         for key in self.coordinate_array.keys():
             for game_object in self.coordinate_array[key]:
-                game_object.rect_draw = game_object.rect_scaled.copy()
-                game_object.rect_draw.x = self.convert_to_screen_coordinates(self.check_position(game_object))[0]
-                game_object.rect_draw.y = self.convert_to_screen_coordinates(self.check_position(game_object))[1]
-                # Possibly move draw to a separate function
-                game_object.draw(self)
-                # self.draw_object(game_object)
+                object_rect = pygame.Rect(game_object.rect.topleft, (game_object.rect_scaled.width,
+                                                                     game_object.rect_scaled.height))
+                """if game_object.rect_scaled.colliderect(self.view_rect):
+                    print("Should be drawing")
+                    # If views not empty
+                    self.views[0].insert_object(game_object, (self.view_rect.x + game_object.rect_scaled.x,
+                                                              self.view_rect.y + game_object.rect_scaled.y))"""
+                # print(str(self.view_rect.x) + " " + str(game_object.rect_scaled.x))
+                # print(str(self.view_rect.y) + " " + str(game_object.rect_scaled.y))
+
+                # print(str(self.views[0].x_scale) + " " + str(self.views[0].y_scale))
+                if self.view_rect.colliderect(object_rect):
+                    self.views[0].insert_object(game_object, (game_object.rect_scaled.x - self.view_rect.x,
+                                                              game_object.rect_scaled.y - self.view_rect.y))
+        self.views[0].update()
 
     def update_screen_coordinates(self, (width, height)):
         pygame.Surface.__init__(self, (width, height))
-        self.x_scale = self.get_width()/float(self.coordinate_width)
-        self.y_scale = self.get_height()/float(self.coordinate_height)
+        self.x_scale = self.views[0].get_width()/float(self.coordinate_width)
+        self.y_scale = self.views[0].get_height()/float(self.coordinate_height)
         for key in self.coordinate_array.keys():
             for game_object in self.coordinate_array[key]:
                 game_object.scale(self.x_scale, self.y_scale)

@@ -7,6 +7,12 @@ CoordinateSurface
         Account for overlap
     Look into using video memory
     Consider integrating insert_object_centered as a flag into insert_object
+    CoordinateSurface does not allow things to be off screen... This is bad.
+        Perhaps create secondary scene object which holds a CoordinateSurface and only displays visible parts on surface
+        Can add objects directly to CoordinateSurface (GUI), or to Scene (GameObjects)
+        If added to scene, objects added to coordinate_array of scene, all access functions same as CoordinateSurface
+            but only adds to CoordinateSurface if in view
+        Scene should not own CoordinateSurface. Not be initialized with one
 GameObject
     Implement flip/rotate sprite
     Implement animation
