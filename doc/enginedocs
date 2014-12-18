@@ -31,6 +31,9 @@ Engine Documentation
 
             update_screen_coordinates(self, (width, height))
 
+    scene.py
+        Scene()
+
     gameclock.py
         GameClock(ticks_per_second=25, max_fps=0, use_wait=True, max_frame_skip=5,
         update_callback=None, frame_callback=None, time_source=None)

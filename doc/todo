@@ -1,18 +1,19 @@
 Implement clock
     Should be done, not tested much yet though
 Implement state
+    Should probably be a collection of scenes
 CoordinateSurface
     Append remove_object so that it can remove one at position or remove all at position
     Implement layers by checking if layer is higher or lower than other layers in list. Then draw in order.
         Account for overlap
     Look into using video memory
     Consider integrating insert_object_centered as a flag into insert_object
-    CoordinateSurface does not allow things to be off screen... This is bad.
         Perhaps create secondary scene object which holds a CoordinateSurface and only displays visible parts on surface
         Can add objects directly to CoordinateSurface (GUI), or to Scene (GameObjects)
-        If added to scene, objects added to coordinate_array of scene, all access functions same as CoordinateSurface
-            but only adds to CoordinateSurface if in view
         Scene should not own CoordinateSurface. Not be initialized with one
+            Fixed
+            Add functionality for multiple views and operating on each view of a scene
+            Implement functions for panning the views
 GameObject
     Implement flip/rotate sprite
     Implement animation

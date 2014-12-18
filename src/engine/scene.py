@@ -7,14 +7,15 @@ from coordsurface import CoordinateSurface
 class Scene(object):
     coordinate_array = {}
     views = []
+    view_rects = []
 
-    def __init__(self, (view_width, view_height), (scene_width, scene_height), (view_x, view_y)):
+    def __init__(self, (scene_width, scene_height), (view_width, view_height), (view_x, view_y)):
         # self.views.append(CoordinateSurface(rect, (view_width, view_height)))
         self.scene_width = scene_width
         self.scene_height = scene_height
         self.view_x = view_x
         self.view_y = view_y
-        self.view_rect = pygame.Rect((view_x, view_y), (view_width, view_height))
+        self.view_rects.append(pygame.Rect((view_x, view_y), (view_width, view_height)))
 
     def insert_object(self, game_object, (x_coordinate, y_coordinate)):
         if x_coordinate > self.scene_width or y_coordinate > self.scene_height:
@@ -120,8 +121,12 @@ class Scene(object):
         # print(str(game_x_coordinate) + " " + str(game_y_coordinate))
         return game_x_coordinate, game_y_coordinate"""
 
+    def pan_view(self, view_index, (x_increment, y_increment)):
+        self.view_rects[view_index].x += x_increment*self.views[view_index].x_scale
+        self.view_rects[view_index].y += y_increment*self.views[view_index].y_scale
+
     def update(self):
-        # self.view_rect = pygame.Rect((self.views[0].
+        # self.view_rect = self.views[0].get_rect()
         self.views[0].clear()
         for key in self.coordinate_array.keys():
             for game_object in self.coordinate_array[key]:
@@ -136,21 +141,21 @@ class Scene(object):
                 # print(str(self.view_rect.y) + " " + str(game_object.rect_scaled.y))
 
                 # print(str(self.views[0].x_scale) + " " + str(self.views[0].y_scale))
-                if self.view_rect.colliderect(object_rect):
-                    self.views[0].insert_object(game_object, (game_object.rect_scaled.x - self.view_rect.x,
-                                                              game_object.rect_scaled.y - self.view_rect.y))
+                if self.view_rects[0].colliderect(object_rect):
+                    self.views[0].insert_object(game_object, (game_object.rect_scaled.x - self.view_rects[0].x,
+                                                              game_object.rect_scaled.y - self.view_rects[0].y))
         self.views[0].update()
 
     def update_screen_coordinates(self, (width, height)):
-        pygame.Surface.__init__(self, (width, height))
-        self.x_scale = self.views[0].get_width()/float(self.coordinate_width)
-        self.y_scale = self.views[0].get_height()/float(self.coordinate_height)
+        self.views[0].update_screen_coordinates((width, height))
+        # self.view_rects[0] = pygame.Rect((view_x, view_y), (view_width, view_height))
         for key in self.coordinate_array.keys():
             for game_object in self.coordinate_array[key]:
-                game_object.scale(self.x_scale, self.y_scale)
+                game_object.scale(self.views[0].x_scale, self.views[0].y_scale)
 
     def update_objects(self):
-        pass
+        for view in self.views:
+            view.update_objects()
 
     # Deprecated
     def draw_object(self, game_object):
