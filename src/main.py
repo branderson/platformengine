@@ -24,7 +24,7 @@ GAME_MASK = ['game']
 
 
 def main():
-    global screen, game_surface, gui_surface, clock, scene
+    global screen, game_surface, gui_surface, clock, scene, current_width
     pygame.init()
 
     # Set up the window
@@ -36,6 +36,7 @@ def main():
     scene.insert_view(gui_surface, (0, 0))
     screen.blit(game_surface, (0, 0))
     screen.blit(gui_surface, (400, 0))
+    current_width = 800
 
     # Set up the clock
     clock = engine.GameClock(*CLOCK_SETTINGS)
@@ -55,6 +56,7 @@ def run_game():
     scene.insert_object(test1, (75, 75))
     test2 = engine.GameObject(RESOURCE_DIR + '256.jpg', masks=['mask2'])
     scene.insert_object(test2, (175, 75))
+    switched = False
     # Test code end
 
     # Game loop
@@ -91,7 +93,7 @@ def update_clock():
 
 
 def update_logic():
-    global scene
+    global scene, test1, test2
     key = pygame.key.get_pressed()
     if key[K_a]:
         scene.pan_view((5, 0), 0)
@@ -101,21 +103,30 @@ def update_logic():
         scene.pan_view((0, -5), 0)
     if key[K_w]:
         scene.pan_view((0, 5), 0)
+    if key[K_LEFT]:
+        scene.increment_object(test1, (-5, 0))
+    if key[K_RIGHT]:
+        scene.increment_object(test1, (5, 0))
+    if key[K_UP]:
+        scene.increment_object(test1, (0, -5))
+    if key[K_DOWN]:
+        scene.increment_object(test1, (0, 5))
+
 
 def draw_game():
-    global sprite_group, game_surface, gui_surface, screen, scene
-    scene.update(0, ['mask1'])
+    global sprite_group, game_surface, gui_surface, screen, scene, current_width
+    scene.update(0, ['mask1', 'mask2'])
     scene.update(1, ['mask2'])
     # game_surface2.fill((125, 125, 125))
     # game_surface.draw()
     # sprite_group.draw(game_surface)
     screen.blit(game_surface, (0, 0))
-    screen.blit(gui_surface, (400, 0))
+    screen.blit(gui_surface, (current_width/2, 0))
     return
 
 
 def handle_event(event):
-    global screen, game_surface, switched, scene, test1
+    global screen, game_surface, switched, scene, test1, current_width
     # Quit the game
     if event.type == QUIT:
         pygame.quit()
@@ -126,13 +137,16 @@ def handle_event(event):
         if event.key == K_q:
             if switched:
                 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-                scene.update_screen_coordinates((SCREEN_WIDTH, SCREEN_HEIGHT), 0)
+                scene.update_screen_coordinates((SCREEN_WIDTH/2, SCREEN_HEIGHT), 0)
+                scene.update_screen_coordinates((SCREEN_WIDTH/2, SCREEN_HEIGHT), 1)
+                current_width = SCREEN_WIDTH
                 switched = False
             else:
-                screen = pygame.display.set_mode((400, 300))
-                scene.update_screen_coordinates((400, 300), 0)
-                scene.update_screen_coordinates((400, 300), 1)
+                screen = pygame.display.set_mode((SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+                scene.update_screen_coordinates((SCREEN_WIDTH/4, SCREEN_HEIGHT/2), 0)
+                scene.update_screen_coordinates((SCREEN_WIDTH/4, SCREEN_HEIGHT/2), 1)
                 # scene.remove_object(test1)
+                current_width = SCREEN_WIDTH/2
                 switched = True
     # Test code end
     return

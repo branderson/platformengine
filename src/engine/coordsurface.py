@@ -143,10 +143,10 @@ class CoordinateSurface(pygame.Surface):
                     y = self.convert_to_screen_coordinates(self.check_position(game_object))[1]
                     game_object.draw(self, self.x_scale, self.y_scale, x, y)
                 else:
-                    draw_object = True
+                    draw_object = False
                     for mask in masks:
                         if game_object.masks.count(mask) == 0:
-                            draw_object = False
+                            draw_object = True
                     if draw_object:
                         # game_object.scale(self.x_scale, self.y_scale)
                         # game_object.rect_draw = game_object.rect_scaled.copy()

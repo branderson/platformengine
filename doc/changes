@@ -3,6 +3,7 @@ Dec. 19
     Scale rects are now only calculated on draw and not stored
     Multiple views can be owned by a scene and on screen at once!
     Masks work!!!
+        Fixed masks so objects are drawn if they have at least one of the masks, rather than all of them
 Up to Dec. 17
     Clock implemented
     CoordinateSurface implemented

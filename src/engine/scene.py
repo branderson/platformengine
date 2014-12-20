@@ -91,7 +91,6 @@ class Scene(object):
     def move_object(self, game_object, (x_destination, y_destination)):
         position = self.check_position(game_object)
         coordinate = (x_destination, y_destination)
-        # We're gonna need to refactor so that each coordinate is a list of objects
         if position is not None:
             if coordinate in self.coordinate_array:
                 self.coordinate_array[coordinate].append(game_object)
@@ -126,18 +125,19 @@ class Scene(object):
         return game_x_coordinate, game_y_coordinate"""
 
     def pan_view(self, (x_increment, y_increment), view_index=0):
-        self.view_rects[view_index].x += x_increment*self.views[view_index].x_scale
-        self.view_rects[view_index].y += y_increment*self.views[view_index].y_scale
-        print(str(self.views[view_index].x_scale) + " " + str(self.views[view_index].y_scale))
-        print(str(x_increment*self.views[view_index].x_scale) + " " + str(y_increment*self.views[view_index].y_scale))
-        print("")
+        # May or may not need the scales here. Further testing is required
+        self.view_rects[view_index].x += x_increment  # self.views[view_index].x_scale
+        self.view_rects[view_index].y += y_increment  # *self.views[view_index].y_scale
+        # print(str(self.views[view_index].x_scale) + " " + str(self.views[view_index].y_scale))
+        # print(str(x_increment*self.views[view_index].x_scale) + " " + str(y_increment*self.views[view_index].y_scale))
+        # print("")
 
     def update(self, view_index=0, masks=None):
         # self.view_rect = self.views[0].get_rect()
         self.views[view_index].clear()
         for key in self.coordinate_array.keys():
             for game_object in self.coordinate_array[key]:
-                add_object = True
+                add_object = False
                 object_rect = pygame.Rect(game_object.rect.topleft, (game_object.rect.width,  #_scaled.width,
                                                                      game_object.rect.height))  # _scaled.height))
                 """if game_object.rect_scaled.colliderect(self.view_rect):
@@ -156,18 +156,18 @@ class Scene(object):
                     #                                                    game_object.rect_scaled.y -
                     #                                                    self.view_rects[view_index].y))
                     if masks is None:
-                        self.views[view_index].insert_object(game_object, (game_object.rect.x -
+                        self.views[view_index].insert_object(game_object, (self.check_position(game_object)[0] -
                                                                            self.view_rects[view_index].x,
-                                                                           game_object.rect.y -
+                                                                           self.check_position(game_object)[1] -
                                                                            self.view_rects[view_index].y))
                     else:
                         for mask in masks:
                             if game_object.masks.count(mask) == 0:
-                                add_object = False
+                                add_object = True
                         if add_object:
-                            self.views[view_index].insert_object(game_object, (game_object.rect.x -
+                            self.views[view_index].insert_object(game_object, (self.check_position(game_object)[0] -
                                                                                self.view_rects[view_index].x,
-                                                                               game_object.rect.y -
+                                                                               self.check_position(game_object)[1] -
                                                                                self.view_rects[view_index].y))
         self.views[view_index].update(masks)
 
