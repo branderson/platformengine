@@ -12,7 +12,7 @@ class GameObject(pygame.sprite.Sprite, object):
             self.image = pygame.Surface((0, 0))
         else:
             try:
-                self.image = pygame.image.load(filename).convert()
+                self.image = pygame.image.load(filename).convert_alpha()
             except:
                 self.image = pygame.Surface((0, 0))
                 print("The image failed to load")

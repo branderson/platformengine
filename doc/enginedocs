@@ -3,33 +3,33 @@ Engine Documentation
         CoordinateSurface(rect, (coordinate_width, coordinate_height))
             Pygame Surface, with functions for manipulating objects in 2 dimensional coordinate grid
 
-            insert_object(game_object, (x_coordinate, y_coordinate))
+        insert_object(game_object, (x_coordinate, y_coordinate))
 
-            insert_object_centered(game_object, (x_coordinate, y_coordinate))
+        insert_object_centered(game_object, (x_coordinate, y_coordinate))
 
-            remove_object(game_object=None)
+        remove_object(game_object=None)
 
-            clear()
+        clear()
 
-            bool check_collision((x_coordinate, y_coordinate))
-                Checks if GameObject exists at coordinates
+        bool check_collision((x_coordinate, y_coordinate))
+            Checks if GameObject exists at coordinates
 
-            check_collision_objects((x_coordinate, y_coordinate))
-                Returns list of objects at coordinates
+        check_collision_objects((x_coordinate, y_coordinate))
+            Returns list of objects at coordinates
 
-            move_object(game_object, (x_destination, y_destination))
+        move_object(game_object, (x_destination, y_destination))
 
-            increment_object(game_object, (x_increment, y_increment))
+        increment_object(game_object, (x_increment, y_increment))
 
-            check_position(self, game_object)
+        check_position(self, game_object)
 
-            convert_to_surface_coordinates((x_coordinate, y_coordinate))
+        convert_to_surface_coordinates((x_coordinate, y_coordinate))
 
-            convert_to_screen_coordinates((x_coordinate, y_coordinate))
+        convert_to_screen_coordinates((x_coordinate, y_coordinate))
 
-            update()
+        update()
 
-            update_screen_coordinates(self, (width, height))
+        update_screen_coordinates(self, (width, height))
 
     scene.py
         Scene()
@@ -98,30 +98,69 @@ Engine Documentation
             unschedule() -> Schedule removal.
 
     gameobject.py
-        GameObject(filename=None, layer=0)
-            Creates new GameObject with filename loaded as image and layer set to input
+        GameObject(filename=None, layer=0, masks=None)
+            Creates new GameObject with filename loaded as image, layer set to input, and initializes masks with input
 
-            destroy()
-                deletes the object (probably not necessary)
+        add_mask(mask)
+            appends mask to masks
 
-            draw(surface)
-                draws the scaled image to the surface
+        remove_mask(mask)
+            removes the mask from the masks list
 
-            scale(x_scale, y_scale)
-                scales the image by the x_scale and y_scale multipliers
+        destroy()
+            deletes the object (probably not necessary)
+
+        draw(surface)
+            draws the scaled image to the surface
+
+        scale(x_scale, y_scale)
+            scales the image by the x_scale and y_scale multipliers
+
+    scene.py
+        Scene((scene_width, scene_height))
+            Initializes a room of scene_width and scene_size
+
+        insert_view(surface, (view_x, view_y), (view_width, view_height))
+
+        insert_object()
+
+        insert_object_centered()
+
+        remove_object()
+
+        clear()
+
+        check_collision()
+
+        check_collision_objects()
+
+        move_object()
+
+        increment_object()
+
+        check_position()
+
+        pan_view()
+
+        update()
+
+        update_screen_coordinates()
+
+        update_objects()
+
 
     spritesheet.py
         Spritesheet(filename)
             Loads a spritesheet from filename
 
-            image_at(rectangle, colorkey=None)
-                Loads image at rectangle, and returns it using colorkey
+        image_at(rectangle, colorkey=None)
+            Loads image at rectangle, and returns it using colorkey
 
-            images_at(rectangle_list, colorkey=None)
-                Runs image_at for each rectangle in rectangle_list, returns list of images
+        images_at(rectangle_list, colorkey=None)
+            Runs image_at for each rectangle in rectangle_list, returns list of images
 
-            load_strip(rect, image_count, colorkey=None)
-                Breaks rect up into a list of rects based on image_count, runs images_at for each rect and returns list
+        load_strip(rect, image_count, colorkey=None)
+            Breaks rect up into a list of rects based on image_count, runs images_at for each rect and returns list
 
     state.py
         State()

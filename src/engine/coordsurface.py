@@ -18,9 +18,9 @@ class CoordinateSurface(pygame.Surface):
     def __init__(self, rect, (coordinate_width, coordinate_height)):
         # This part should be cleaned up
         try:
-            pygame.Surface.__init__(self, (rect.width, rect.height))
+            pygame.Surface.__init__(self, (rect.width, rect.height), flags=pygame.SRCALPHA | pygame.HWSURFACE)
         except:
-            pygame.Surface.__init__(self, (rect[0], rect[1]))
+            pygame.Surface.__init__(self, (rect[0], rect[1]), flags=pygame.SRCALPHA | pygame.HWSURFACE)
 
         self.coordinate_width = coordinate_width
         self.coordinate_height = coordinate_height
@@ -134,8 +134,11 @@ class CoordinateSurface(pygame.Surface):
         # print(str(screen_x_coordinate) + " " + str(screen_y_coordinate))
         return screen_x_coordinate, screen_y_coordinate
 
-    def update(self, masks=None):
-        self.fill((255, 255, 255))
+    def update(self, fill=None, masks=None):
+        if fill is None:
+            self.fill((255, 255, 255))
+        else:
+            self.fill(fill)
         for key in self.coordinate_array.keys():
             for game_object in self.coordinate_array[key]:
                 if masks is None:
@@ -145,7 +148,7 @@ class CoordinateSurface(pygame.Surface):
                 else:
                     draw_object = False
                     for mask in masks:
-                        if game_object.masks.count(mask) == 0:
+                        if game_object.masks.count(mask) != 0:
                             draw_object = True
                     if draw_object:
                         # game_object.scale(self.x_scale, self.y_scale)

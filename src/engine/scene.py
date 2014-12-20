@@ -132,7 +132,7 @@ class Scene(object):
         # print(str(x_increment*self.views[view_index].x_scale) + " " + str(y_increment*self.views[view_index].y_scale))
         # print("")
 
-    def update(self, view_index=0, masks=None):
+    def update(self, view_index=0, fill=None, masks=None):
         # self.view_rect = self.views[0].get_rect()
         self.views[view_index].clear()
         for key in self.coordinate_array.keys():
@@ -162,14 +162,14 @@ class Scene(object):
                                                                            self.view_rects[view_index].y))
                     else:
                         for mask in masks:
-                            if game_object.masks.count(mask) == 0:
+                            if game_object.masks.count(mask) != 0:
                                 add_object = True
                         if add_object:
                             self.views[view_index].insert_object(game_object, (self.check_position(game_object)[0] -
                                                                                self.view_rects[view_index].x,
                                                                                self.check_position(game_object)[1] -
                                                                                self.view_rects[view_index].y))
-        self.views[view_index].update(masks)
+        self.views[view_index].update(fill, masks)
 
     def update_screen_coordinates(self, (width, height), view_index=0):
         self.views[view_index].update_screen_coordinates((width, height))

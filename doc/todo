@@ -1,5 +1,3 @@
-Implement clock
-    Should be done, not tested much yet though
 Implement state
     Should probably be a collection of scenes
 CoordinateSurface
@@ -10,7 +8,9 @@ CoordinateSurface
     Definitely need transparency now that I have masks
     Consider integrating insert_object_centered as a flag into insert_object
     A large portion of this might be unnecessary (I may have been able to use subsurfaces)
+Scene
     May or may not need scaling on pan_view
+    Perhaps make 0 in scene_width/scene_height make the room infinite
 GameObject
     Implement flip/rotate sprite
     Implement animation

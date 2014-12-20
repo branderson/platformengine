@@ -1,0 +1,4 @@
+Scene
+    If the view moves to certain places, objects seem to disappear
+    Somehow an independent CoordinateSurface is getting an object from a scene
+        For some reason CoordinateSurfaces cannot seem to function outside of a scene...
