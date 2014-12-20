@@ -1,3 +1,5 @@
+Dec. 20
+    Fixed objects not being drawn when moved too far, was checking rect which doesn't change instead of check_position()
 Dec. 19
     Views no longer own objects
     Scale rects are now only calculated on draw and not stored

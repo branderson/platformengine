@@ -38,7 +38,6 @@ def main():
     scene = engine.Scene((10000, 10000))
     scene.insert_view(game_surface, (0, 0))
     scene.insert_view(gui_surface, (0, 0))
-    scene.insert_view(gui, (0, 0))
     screen.blit(game_surface, (0, 0))
     screen.blit(gui_surface, (400, 0))
     screen.blit(gui, (0, 0))
@@ -64,7 +63,7 @@ def run_game():
     test2 = engine.GameObject(RESOURCE_DIR + '256.jpg', masks=['mask2'])
     scene.insert_object(test2, (175, 75))
     test3 = engine.GameObject(RESOURCE_DIR + '312.jpg', masks=['gui'])
-    scene.insert_object(test3, (300, 0))
+    gui.insert_object(test3, (300, 150))
     switched = False
     # Test code end
 
@@ -126,7 +125,7 @@ def draw_game():
     global sprite_group, game_surface, gui_surface, screen, scene, current_width, gui
     scene.update(0, masks=['mask1', 'mask2'])
     scene.update(1, masks=['mask2'])
-    scene.update(2, (0, 0, 0, 0), ['mask1', 'gui'])
+    gui.update((0, 0, 0, 0), ['gui'])
     # game_surface2.fill((125, 125, 125))
     # game_surface.draw()
     # sprite_group.draw(game_surface)
@@ -150,14 +149,14 @@ def handle_event(event):
                 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
                 scene.update_screen_coordinates((SCREEN_WIDTH/2, SCREEN_HEIGHT), 0)
                 scene.update_screen_coordinates((SCREEN_WIDTH/2, SCREEN_HEIGHT), 1)
-                scene.update_screen_coordinates((SCREEN_WIDTH, SCREEN_HEIGHT), 2)
+                gui.update_screen_coordinates((SCREEN_WIDTH, SCREEN_HEIGHT))
                 current_width = SCREEN_WIDTH
                 switched = False
             else:
                 screen = pygame.display.set_mode((SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
                 scene.update_screen_coordinates((SCREEN_WIDTH/4, SCREEN_HEIGHT/2), 0)
                 scene.update_screen_coordinates((SCREEN_WIDTH/4, SCREEN_HEIGHT/2), 1)
-                scene.update_screen_coordinates((SCREEN_WIDTH/2, SCREEN_HEIGHT/2), 2)
+                gui.update_screen_coordinates((SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
                 # scene.remove_object(test1)
                 current_width = SCREEN_WIDTH/2
                 switched = True

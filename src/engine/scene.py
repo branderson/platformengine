@@ -138,8 +138,8 @@ class Scene(object):
         for key in self.coordinate_array.keys():
             for game_object in self.coordinate_array[key]:
                 add_object = False
-                object_rect = pygame.Rect(game_object.rect.topleft, (game_object.rect.width,  #_scaled.width,
-                                                                     game_object.rect.height))  # _scaled.height))
+                object_rect = pygame.Rect(self.check_position(game_object), (game_object.rect.width,  # *self.views[view_index].x_scale,  #_scaled.width,
+                                                                     game_object.rect.height))  # *self.views[view_index].y_scale))  # _scaled.height))
                 """if game_object.rect_scaled.colliderect(self.view_rect):
                     print("Should be drawing")
                     # If views not empty
@@ -156,19 +156,16 @@ class Scene(object):
                     #                                                    game_object.rect_scaled.y -
                     #                                                    self.view_rects[view_index].y))
                     if masks is None:
-                        self.views[view_index].insert_object(game_object, (self.check_position(game_object)[0] -
-                                                                           self.view_rects[view_index].x,
-                                                                           self.check_position(game_object)[1] -
-                                                                           self.view_rects[view_index].y))
+                        add_object = True
                     else:
                         for mask in masks:
                             if game_object.masks.count(mask) != 0:
                                 add_object = True
-                        if add_object:
-                            self.views[view_index].insert_object(game_object, (self.check_position(game_object)[0] -
-                                                                               self.view_rects[view_index].x,
-                                                                               self.check_position(game_object)[1] -
-                                                                               self.view_rects[view_index].y))
+                    if add_object:
+                        self.views[view_index].insert_object(game_object, (self.check_position(game_object)[0] -
+                                                                           self.view_rects[view_index].x,
+                                                                           self.check_position(game_object)[1] -
+                                                                           self.view_rects[view_index].y))
         self.views[view_index].update(fill, masks)
 
     def update_screen_coordinates(self, (width, height), view_index=0):

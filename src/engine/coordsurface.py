@@ -67,8 +67,9 @@ class CoordinateSurface(pygame.Surface):
 
     def clear(self):
         # Delete the objects as well
-        for key in self.coordinate_array.keys():
-            del self.coordinate_array[key]
+        # for key in self.coordinate_array.keys():
+        #     del self.coordinate_array[key]
+        self.coordinate_array = {}
 
     def check_collision(self, (x_coordinate, y_coordinate)):
         coordinate = (x_coordinate, y_coordinate)
@@ -160,7 +161,7 @@ class CoordinateSurface(pygame.Surface):
                         # self.draw_object(game_object)
 
     def update_screen_coordinates(self, (width, height)):
-        pygame.Surface.__init__(self, (width, height))
+        pygame.Surface.__init__(self, (width, height), flags=pygame.SRCALPHA | pygame.HWSURFACE)
         self.x_scale = float(self.get_width())/float(self.coordinate_width)
         self.y_scale = float(self.get_height())/float(self.coordinate_height)
         # for key in self.coordinate_array.keys():

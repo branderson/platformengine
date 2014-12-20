@@ -44,8 +44,8 @@ class GameObject(pygame.sprite.Sprite, object):
                                                          int(self.image.get_height()*y_scale))), rect_scaled)
 
     def scale(self, x_scale, y_scale):
-        self.image_scaled = pygame.transform.scale(self.image, (int(self.image.get_width()*x_scale),
-                                                                int(self.image.get_height()*y_scale)))
+        # self.image_scaled = pygame.transform.scale(self.image, (int(self.image.get_width()*x_scale),
+        #                                                         int(self.image.get_height()*y_scale)))
         # self.rect_scaled.inflate_ip(-x_scale, -y_scale)
         self.rect_scaled = pygame.Rect(self.rect.topleft, (int(self.rect.width*x_scale), int(self.rect.height*y_scale)))
         # print(str(self.rect_scaled.x) + " " + str(self.rect_scaled.y))
