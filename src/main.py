@@ -19,20 +19,23 @@ UPDATE_CALLBACK = None
 FRAME_CALLBACK = None
 CLOCK_SETTINGS = (TICKS_PER_SECOND, MAX_FPS, USE_WAIT, MAX_FRAME_SKIP, UPDATE_CALLBACK, FRAME_CALLBACK)
 RESOURCE_DIR = '../resources/'
+GUI_MASK = ['gui']
+GAME_MASK = ['game']
 
 
 def main():
-    global screen, game_surface, clock, scene
+    global screen, game_surface, gui_surface, clock, scene
     pygame.init()
 
     # Set up the window
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    game_surface = engine.CoordinateSurface(screen.get_rect(), (COORDINATE_WIDTH, COORDINATE_HEIGHT))
-    # game_surface.fill((255, 255, 255))
-    # game_surface = engine.CoordinateSurface(pygame.Rect((20, 50), (100, 100)), (COORDINATE_WIDTH, COORDINATE_HEIGHT))
-    scene = engine.Scene((10000, 10000), (COORDINATE_WIDTH, COORDINATE_HEIGHT), (0, 0))
-    scene.views.append(game_surface)
-    screen.blit(game_surface, screen.get_rect())
+    game_surface = engine.CoordinateSurface(pygame.Rect((0, 0), (SCREEN_WIDTH/2, SCREEN_HEIGHT)), (COORDINATE_WIDTH/2, COORDINATE_HEIGHT))
+    gui_surface = engine.CoordinateSurface(pygame.Rect((0, 0), (SCREEN_WIDTH/2, SCREEN_HEIGHT)), (COORDINATE_WIDTH/2, COORDINATE_HEIGHT))
+    scene = engine.Scene((10000, 10000))
+    scene.insert_view(game_surface, (0, 0))
+    scene.insert_view(gui_surface, (0, 0))
+    screen.blit(game_surface, (0, 0))
+    screen.blit(gui_surface, (400, 0))
 
     # Set up the clock
     clock = engine.GameClock(*CLOCK_SETTINGS)
@@ -43,14 +46,15 @@ def main():
 
 
 def run_game():
-    global screen, game_surface, sprite_group, game_ticks, clock, switched, scene, test1
+    global screen, game_surface, gui_surface, sprite_group, game_ticks, clock, switched, scene, test1, test2
     sprite_group = pygame.sprite.Group()
     game_ticks = 0
 
     # Test code begin
-    test1 = engine.GameObject(RESOURCE_DIR + '124.jpg')
+    test1 = engine.GameObject(RESOURCE_DIR + '124.jpg', masks=['mask1'])
     scene.insert_object(test1, (75, 75))
-    switched = False
+    test2 = engine.GameObject(RESOURCE_DIR + '256.jpg', masks=['mask2'])
+    scene.insert_object(test2, (175, 75))
     # Test code end
 
     # Game loop
@@ -90,20 +94,23 @@ def update_logic():
     global scene
     key = pygame.key.get_pressed()
     if key[K_a]:
-        scene.pan_view(0, (5, 0))
+        scene.pan_view((5, 0), 0)
     if key[K_d]:
-        scene.pan_view(0, (-5, 0))
+        scene.pan_view((-5, 0), 0)
     if key[K_s]:
-        scene.pan_view(0, (0, -5))
+        scene.pan_view((0, -5), 0)
     if key[K_w]:
-        scene.pan_view(0, (0, 5))
+        scene.pan_view((0, 5), 0)
 
 def draw_game():
-    global sprite_group, game_surface, screen, scene
-    scene.update()
+    global sprite_group, game_surface, gui_surface, screen, scene
+    scene.update(0, ['mask1'])
+    scene.update(1, ['mask2'])
+    # game_surface2.fill((125, 125, 125))
     # game_surface.draw()
     # sprite_group.draw(game_surface)
-    screen.blit(game_surface, screen.get_rect())
+    screen.blit(game_surface, (0, 0))
+    screen.blit(gui_surface, (400, 0))
     return
 
 
@@ -119,11 +126,12 @@ def handle_event(event):
         if event.key == K_q:
             if switched:
                 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-                scene.update_screen_coordinates((SCREEN_WIDTH, SCREEN_HEIGHT))
+                scene.update_screen_coordinates((SCREEN_WIDTH, SCREEN_HEIGHT), 0)
                 switched = False
             else:
                 screen = pygame.display.set_mode((400, 300))
-                scene.update_screen_coordinates((400, 300))
+                scene.update_screen_coordinates((400, 300), 0)
+                scene.update_screen_coordinates((400, 300), 1)
                 # scene.remove_object(test1)
                 switched = True
     # Test code end

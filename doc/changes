@@ -1,3 +1,8 @@
+Dec. 19
+    Views no longer own objects
+    Scale rects are now only calculated on draw and not stored
+    Multiple views can be owned by a scene and on screen at once!
+    Masks work!!!
 Up to Dec. 17
     Clock implemented
     CoordinateSurface implemented

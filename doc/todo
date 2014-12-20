@@ -7,6 +7,7 @@ CoordinateSurface
     Implement layers by checking if layer is higher or lower than other layers in list. Then draw in order.
         Account for overlap
     Look into using video memory
+    Definitely need transparency now that I have masks
     Consider integrating insert_object_centered as a flag into insert_object
         Perhaps create secondary scene object which holds a CoordinateSurface and only displays visible parts on surface
         Can add objects directly to CoordinateSurface (GUI), or to Scene (GameObjects)
@@ -14,6 +15,11 @@ CoordinateSurface
             Fixed
             Add functionality for multiple views and operating on each view of a scene
             Implement functions for panning the views
+    A large portion of this might be unnecessary (I may have been able to use subsurfaces)
+        Regardless, carry on, this can be changed later on once scenes/surfaces are blackboxed
+    Seems to move view way faster with bigger screen
+        Apparently this isn't true
+    Implement masks as lists (or flags if I can figure that out)
 GameObject
     Implement flip/rotate sprite
     Implement animation
