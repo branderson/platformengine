@@ -36,8 +36,8 @@ def main():
     gui = engine.CoordinateSurface(pygame.Rect((0, 0), (SCREEN_WIDTH, SCREEN_HEIGHT)),
                                             (COORDINATE_WIDTH, COORDINATE_HEIGHT))
     scene = engine.Scene((10000, 10000))
-    scene.insert_view(game_surface, (0, 0))
-    scene.insert_view(gui_surface, (0, 0))
+    scene.insert_view(game_surface, 'game_surface', (0, 0))
+    scene.insert_view(gui_surface, 'gui_surface', (0, 0))
     screen.blit(game_surface, (0, 0))
     screen.blit(gui_surface, (400, 0))
     screen.blit(gui, (0, 0))
@@ -105,13 +105,13 @@ def update_logic():
     global scene, test1, test2
     key = pygame.key.get_pressed()
     if key[K_a]:
-        scene.pan_view((5, 0), 0)
+        scene.pan_view((5, 0), 'game_surface')
     if key[K_d]:
-        scene.pan_view((-5, 0), 0)
+        scene.pan_view((-5, 0), 'game_surface')
     if key[K_s]:
-        scene.pan_view((0, -5), 0)
+        scene.pan_view((0, -5), 'game_surface')
     if key[K_w]:
-        scene.pan_view((0, 5), 0)
+        scene.pan_view((0, 5), 'game_surface')
     if key[K_LEFT]:
         scene.increment_object(test1, (-5, 0))
     if key[K_RIGHT]:
@@ -124,9 +124,9 @@ def update_logic():
 
 def draw_game():
     global sprite_group, game_surface, gui_surface, screen, scene, current_width, gui
-    scene.update(0, masks=['mask1'])
+    scene.update('game_surface', masks=['mask1', 'mask2'])
     # game_surface.tint((125, 0, 0, 0))
-    scene.update(1, masks=['mask2', 'mask1'])
+    scene.update('gui_surface', masks=['mask2'])
     gui.update((0, 0, 0, 0), ['gui'])
     # game_surface2.fill((125, 125, 125))
     # game_surface.draw()
@@ -150,16 +150,16 @@ def handle_event(event):
             if switched:
                 test3.change_image('image')
                 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-                scene.update_screen_coordinates((SCREEN_WIDTH/2, SCREEN_HEIGHT), 0)
-                scene.update_screen_coordinates((SCREEN_WIDTH/2, SCREEN_HEIGHT), 1)
+                scene.update_screen_coordinates((SCREEN_WIDTH/2, SCREEN_HEIGHT), 'game_surface')
+                scene.update_screen_coordinates((SCREEN_WIDTH/2, SCREEN_HEIGHT), 'gui_surface')
                 gui.update_screen_coordinates((SCREEN_WIDTH, SCREEN_HEIGHT))
                 current_width = SCREEN_WIDTH
                 switched = False
             else:
                 test3.change_image('red_tint')
                 screen = pygame.display.set_mode((SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-                scene.update_screen_coordinates((SCREEN_WIDTH/4, SCREEN_HEIGHT/2), 0)
-                scene.update_screen_coordinates((SCREEN_WIDTH/4, SCREEN_HEIGHT/2), 1)
+                scene.update_screen_coordinates((SCREEN_WIDTH/4, SCREEN_HEIGHT/2), 'game_surface')
+                scene.update_screen_coordinates((SCREEN_WIDTH/4, SCREEN_HEIGHT/2), 'gui_surface')
                 gui.update_screen_coordinates((SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
                 # scene.remove_object(test1)
                 current_width = SCREEN_WIDTH/2

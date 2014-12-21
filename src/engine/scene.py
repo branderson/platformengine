@@ -6,7 +6,7 @@ from coordsurface import CoordinateSurface
 
 class Scene(object):
     coordinate_array = {}
-    views = []
+    views = {}
     view_rects = {}
 
     def __init__(self, (scene_width, scene_height)):
@@ -18,7 +18,12 @@ class Scene(object):
         if view_size is None:
             view_size = (surface.coordinate_width, surface.coordinate_height)
         self.views[key] = surface
-        self.view_rects.append(pygame.Rect((view_x, view_y), view_size))
+        self.view_rects[key] = pygame.Rect((view_x, view_y), view_size)
+
+    def remove_view(self, key):
+        if key in self.views:
+            del self.views[key]
+            del self.view_rects[key]
 
     def insert_object(self, game_object, (x_coordinate, y_coordinate)):
         if x_coordinate > self.scene_width or y_coordinate > self.scene_height:
@@ -27,7 +32,6 @@ class Scene(object):
             coordinate = (x_coordinate, y_coordinate)
             game_object.rect.x = x_coordinate
             game_object.rect.y = y_coordinate
-            # game_object.scale(self.views[view_index].x_scale, self.views[view_index].y_scale)
 
         if coordinate in self.coordinate_array:
             self.coordinate_array[coordinate].append(game_object)
@@ -115,22 +119,10 @@ class Scene(object):
             if self.coordinate_array[key].count(game_object) > 0:
                 return key
 
-    """def convert_to_view_coordinates(self, (x_coordinate, y_coordinate)):
-        if x_coordinate > self.get_width() or y_coordinate > self.get_height():
-            print("Cannot  enter values greater than size of surface")
-            return
-        game_x_coordinate = (float(self.coordinate_width)/float(self.get_width()))*x_coordinate
-        game_y_coordinate = (float(self.coordinate_height)/float(self.get_height()))*y_coordinate
-        # print(str(game_x_coordinate) + " " + str(game_y_coordinate))
-        return game_x_coordinate, game_y_coordinate"""
-
     def pan_view(self, (x_increment, y_increment), view_index=0):
         # May or may not need the scales here. Further testing is required
         self.view_rects[view_index].x += x_increment  # self.views[view_index].x_scale
         self.view_rects[view_index].y += y_increment  # *self.views[view_index].y_scale
-        # print(str(self.views[view_index].x_scale) + " " + str(self.views[view_index].y_scale))
-        # print(str(x_increment*self.views[view_index].x_scale) + " " + str(y_increment*self.views[view_index].y_scale))
-        # print("")
 
     def update(self, view_index=0, fill=None, masks=None):
         # self.view_rect = self.views[0].get_rect()
@@ -140,21 +132,8 @@ class Scene(object):
                 add_object = False
                 object_rect = pygame.Rect(self.check_position(game_object), (game_object.rect.width,  # *self.views[view_index].x_scale,  #_scaled.width,
                                                                      game_object.rect.height))  # *self.views[view_index].y_scale))  # _scaled.height))
-                """if game_object.rect_scaled.colliderect(self.view_rect):
-                    print("Should be drawing")
-                    # If views not empty
-                    self.views[0].insert_object(game_object, (self.view_rect.x + game_object.rect_scaled.x,
-                                                              self.view_rect.y + game_object.rect_scaled.y))"""
-                # print(str(self.view_rect.x) + " " + str(game_object.rect_scaled.x))
-                # print(str(self.view_rect.y) + " " + str(game_object.rect_scaled.y))
 
-                # print(str(self.views[0].x_scale) + " " + str(self.views[0].y_scale))
                 if self.view_rects[view_index].colliderect(object_rect):
-                    # game_object.scale(self.views[view_index].x_scale, self.views[view_index].y_scale)
-                    # self.views[view_index].insert_object(game_object, (game_object.rect_scaled.x -
-                    #                                                    self.view_rects[view_index].x,
-                    #                                                    game_object.rect_scaled.y -
-                    #                                                    self.view_rects[view_index].y))
                     if masks is None:
                         add_object = True
                     else:
@@ -178,13 +157,3 @@ class Scene(object):
     def update_objects(self):
         for view in self.views:
             view.update_objects()
-
-    # Deprecated
-    def draw_object(self, game_object):
-        self.blit(pygame.transform.scale(game_object.image, (int(game_object.image.get_width()*self.x_scale),
-                                                             int(game_object.image.get_height()*self.y_scale))),
-                  game_object.rect.inflate(-self.x_scale, -self.y_scale))
-
-    def draw(self):
-        for key in self.coordinate_array.keys():
-            pass
