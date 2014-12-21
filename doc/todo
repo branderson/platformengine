@@ -4,16 +4,17 @@ CoordinateSurface
     Append remove_object so that it can remove one at position or remove all at position
     Consider integrating insert_object_centered as a flag into insert_object
     A large portion of this might be unnecessary (I may have been able to use subsurfaces)
-    Implemented tint. Unusably slow
-        Need to change tint functionality in coordinate surface to save to return a new surface, like game_objects do
+    Need to change tint functionality in coordinate surface to save to return a new surface, like game_objects do
+    Don't use the same layer for any two objects, results in crazy drawing when they overlap. No real fix probably possible
 Scene
-    May or may not need scaling on pan_view
     Perhaps make 0 in scene_width/scene_height make the room infinite
+    Collision detection
 GameObject
-    Implement flip/rotate sprite
     Implement animation
     Add get_center function
 Spritesheet
     Add methods for spacing between sprites, strips that are multiple lines, etc
 Implement resource dictionaries
+    Sprite/spritesheet functionality implemented
+    Change resource dictionary to resource manager
 Update the enginedocs

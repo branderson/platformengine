@@ -45,6 +45,8 @@ Engine Documentation
            elapsed intervals.
         3. Employ on-demand time dilation.
 
+        In functions, program what should happen in one second and divide by TICKS_PER_SECOND
+
         Parameters:
             ticks_per_second -> Positive integer. Constant ticks per second for
                 game physics.

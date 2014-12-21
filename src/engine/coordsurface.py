@@ -170,7 +170,7 @@ class CoordinateSurface(pygame.Surface):
                             for mask in masks:
                                 if game_object.masks.count(mask) != 0:
                                     draw_object = True
-                            if draw_object:
+                            if draw_object and game_object.visible:
                                 # game_object.scale(self.x_scale, self.y_scale)
                                 # game_object.rect_draw = game_object.rect_scaled.copy()
                                 x = self.convert_to_screen_coordinates(self.check_position(game_object))[0]

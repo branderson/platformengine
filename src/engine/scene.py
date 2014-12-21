@@ -25,13 +25,31 @@ class Scene(object):
             del self.views[key]
             del self.view_rects[key]
 
+    def pan_view(self, view_index, (x_increment, y_increment)):
+        # May or may not need the scales here. Further testing is required
+        self.view_rects[view_index].x += x_increment  # self.views[view_index].x_scale
+        self.view_rects[view_index].y += y_increment  # *self.views[view_index].y_scale
+
+    def move_view(self, key, (view_x, view_y)):
+        self.view_rects[key].topleft = (view_x, view_y)
+
+    # This one's a mathy doozy, but it centers the view on the object
+    def center_view_on_object(self, key, game_object):
+        self.view_rects[key] = pygame.Rect((self.check_position(game_object)[0] -
+                                            self.view_rects[key].width/2 +
+                                            game_object.rect.width/2,
+                                            self.check_position(game_object)[1] -
+                                            self.view_rects[key].height/2 + game_object.rect.height/2),
+                                           (self.view_rects[key].width,
+                                            self.view_rects[key].height))
+
     def insert_object(self, game_object, (x_coordinate, y_coordinate)):
         if x_coordinate > self.scene_width or y_coordinate > self.scene_height:
             return False
         else:
             coordinate = (x_coordinate, y_coordinate)
-            game_object.rect.x = x_coordinate
-            game_object.rect.y = y_coordinate
+            # game_object.rect.x = x_coordinate
+            # game_object.rect.y = y_coordinate
 
         if coordinate in self.coordinate_array:
             self.coordinate_array[coordinate].append(game_object)
@@ -40,8 +58,8 @@ class Scene(object):
         return True
 
     def insert_object_centered(self, game_object, (x_coordinate, y_coordinate)):
-        game_object.rect.x = x_coordinate
-        game_object.rect.y = y_coordinate
+        # game_object.rect.x = x_coordinate
+        # game_object.rect.y = y_coordinate
         # game_object.scale(self.views[view_index].x_scale, self.views[view_index].y_scale)
         adjusted_x = x_coordinate - game_object.rect.centerx
         adjusted_y = y_coordinate - game_object.rect.centery
@@ -77,20 +95,20 @@ class Scene(object):
                     self.views[view_index].remove_object(game_object)
             del self.coordinate_array[key]
 
-    def check_collision(self, (x_coordinate, y_coordinate)):
-        coordinate = (x_coordinate, y_coordinate)
-        if coordinate in self.coordinate_array:
-            return True
-        else:
-            return False
+    # def check_collision(self, (x_coordinate, y_coordinate)):
+    #     coordinate = (x_coordinate, y_coordinate)
+    #     if coordinate in self.coordinate_array:
+    #         return True
+    #     else:
+    #         return False
 
     # Returns a list of game objects at position
-    def check_collision_objects(self, (x_coordinate, y_coordinate)):
-        coordinate = (x_coordinate, y_coordinate)
-        if coordinate in self.coordinate_array:
-            return self.coordinate_array[coordinate]
-        else:
-            return None
+    # def check_collision_objects(self, (x_coordinate, y_coordinate)):
+    #     coordinate = (x_coordinate, y_coordinate)
+    #     if coordinate in self.coordinate_array:
+    #         return self.coordinate_array[coordinate]
+    #     else:
+    #         return None
 
     def move_object(self, game_object, (x_destination, y_destination)):
         position = self.check_position(game_object)
@@ -119,11 +137,6 @@ class Scene(object):
             if self.coordinate_array[key].count(game_object) > 0:
                 return key
 
-    def pan_view(self, (x_increment, y_increment), view_index=0):
-        # May or may not need the scales here. Further testing is required
-        self.view_rects[view_index].x += x_increment  # self.views[view_index].x_scale
-        self.view_rects[view_index].y += y_increment  # *self.views[view_index].y_scale
-
     def update(self, view_index=0, fill=None, masks=None):
         # self.view_rect = self.views[0].get_rect()
         self.views[view_index].clear()
@@ -147,7 +160,7 @@ class Scene(object):
                                                                            self.view_rects[view_index].y))
         self.views[view_index].update(fill, masks)
 
-    def update_screen_coordinates(self, (width, height), view_index=0):
+    def update_screen_coordinates(self, view_index, (width, height)):
         self.views[view_index].update_screen_coordinates((width, height))
         # self.view_rects[0] = pygame.Rect((view_x, view_y), (view_width, view_height))
         # for key in self.coordinate_array.keys():

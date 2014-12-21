@@ -6,6 +6,7 @@ import scene
 import state
 import gameclock
 import gameobject
+import resourcedict
 
 
 # Import engine level classes
@@ -14,3 +15,4 @@ from scene import Scene
 from state import State
 from gameclock import GameClock
 from gameobject import GameObject
+from resourcedict import ResourceDictionary

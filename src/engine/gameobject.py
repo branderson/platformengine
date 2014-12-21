@@ -1,10 +1,16 @@
 __author__ = 'brad'
 import pygame
+import math
 
 
 class GameObject(pygame.sprite.Sprite, object):
     layer = 0
     images = {}
+    current_image = None
+    flipped_hor = False
+    flipped_ver = False
+    visible = True
+    angle = 0  # 0-360 degrees, 0 is right facing
 
     def __init__(self, filename=None, layer=0, masks=None):
         pygame.sprite.Sprite.__init__(self)
@@ -12,11 +18,13 @@ class GameObject(pygame.sprite.Sprite, object):
         if filename is None:
             self.image = pygame.Surface((0, 0))
         else:
-            try:
-                self.image = pygame.image.load(filename).convert_alpha()
-            except:
-                self.image = pygame.Surface((0, 0))
-                print("The image failed to load")
+            self.image = filename
+            # Figure out how to check if it's an image
+            # try:
+            #     self.image = pygame.image.load(filename).convert_alpha()
+            # except:
+            #     self.image = pygame.Surface((0, 0))
+            #     print("The image failed to load")
         self.rect = self.image.get_rect()
         self.image_scaled = None
         self.rect_scaled = self.image.get_rect()
@@ -24,6 +32,7 @@ class GameObject(pygame.sprite.Sprite, object):
         self.layer = layer
         self.masks = []
         self.images['image'] = self.image
+        self.current_image = self.images['image']
         if masks is not None:
             for mask in masks:
                 self.add_mask(mask)
@@ -41,6 +50,8 @@ class GameObject(pygame.sprite.Sprite, object):
 
     def change_image(self, key):
         self.image = self.images[key]
+        self.current_image = self.images[key]
+        self.rotate(0)
 
     def remove_image(self, key):
         if key in self.images:
@@ -51,17 +62,45 @@ class GameObject(pygame.sprite.Sprite, object):
         return True
 
     def draw(self, surface, x_scale, y_scale, x, y):
-        rect_scaled = pygame.Rect((x, y), (int(self.rect.width*x_scale), int(self.rect.height*y_scale)))
+        rect_scaled = pygame.Rect((x-self.rect.x, y-self.rect.y), (int(self.rect.width*x_scale),
+                                                                   int(self.rect.height*y_scale)))
         surface.blit(pygame.transform.scale(self.image, (int(self.image.get_width()*x_scale),
                                                          int(self.image.get_height()*y_scale))), rect_scaled)
 
-    def scale(self, x_scale, y_scale):
-        self.image_scaled = pygame.transform.scale(self.image, (int(self.image.get_width()*x_scale),
-                                                                int(self.image.get_height()*y_scale)))
-        # self.rect_scaled.inflate_ip(-x_scale, -y_scale)
-        self.rect = pygame.Rect(self.rect.topleft, (int(self.rect.width*x_scale), int(self.rect.height*y_scale)))
-        # print(str(self.rect_scaled.x) + " " + str(self.rect_scaled.y))
-        # pygame.quit()
+    # def scale(self, x_scale, y_scale):
+    #     self.image_scaled = pygame.transform.scale(self.image, (int(self.image.get_width()*x_scale),
+    #                                                             int(self.image.get_height()*y_scale)))
+    #     # self.rect_scaled.inflate_ip(-x_scale, -y_scale)
+    #     self.rect = pygame.Rect(self.rect.topleft, (int(self.rect.width*x_scale), int(self.rect.height*y_scale)))
+    #     # print(str(self.rect_scaled.x) + " " + str(self.rect_scaled.y))
+    #     # pygame.quit()
+
+    def rotate(self, angle):
+        self.angle += angle
+        rect = self.rect
+        flipped_image = pygame.transform.flip(self.current_image, self.flipped_hor, self.flipped_ver)
+        # flipped_image = self.image
+        self.image = pygame.transform.rotate(flipped_image, self.angle)
+        # self.image = pygame.transform.flip(self.image, self.flipped_hor, self.flipped_ver)
+        rect.center = self.image.get_rect().center
+        self.rect = rect
+
+    # Rotates about center, clipping to original width and height
+    # Don't use this, doesn't work
+    def rotate_clip(self, angle):
+        """rotate an image while keeping its center and size"""
+        self.angle += angle
+        rect = self.rect
+        self.image = pygame.transform.rotate(self.current_image, self.angle)
+        rect.center = self.image.get_rect().center
+        self.image = self.image.subsurface(rect).copy()
+
+    def flip(self, flip_hor, flip_ver):
+        if flip_hor:
+            self.flipped_hor = not self.flipped_hor
+        if flip_ver:
+            self.flipped_ver = not self.flipped_ver
+        self.rotate(0)
 
     @staticmethod
     def tint(input_surface, (r, g, b, a)):
