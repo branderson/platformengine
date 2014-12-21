@@ -2,9 +2,6 @@ Implement state
     Should probably be a collection of scenes
 CoordinateSurface
     Append remove_object so that it can remove one at position or remove all at position
-    Implement layers by checking if layer is higher or lower than other layers in list. Then draw in order.
-        Account for overlap
-        Layers still not working
     Consider integrating insert_object_centered as a flag into insert_object
     A large portion of this might be unnecessary (I may have been able to use subsurfaces)
     Implemented tint. Unusably slow

@@ -8,8 +8,11 @@ with a builtin secondary coordinate system, which operates
 irrespectively of the screen coordinates. It holds pointers
 to game objects and can manipulate those objects.
 """
+
+
 class CoordinateSurface(pygame.Surface):
     coordinate_array = {}
+    layers = []
     coordinate_width = 0
     coordinate_height = 0
     x_scale = 1.
@@ -38,6 +41,9 @@ class CoordinateSurface(pygame.Surface):
             self.coordinate_array[coordinate].append(game_object)
         else:
             self.coordinate_array[coordinate] = [game_object]
+        if game_object.layer not in self.layers:
+            self.layers.append(game_object.layer)
+            self.layers.sort()
         return True
 
     def insert_object_centered(self, game_object, (x_coordinate, y_coordinate)):
@@ -53,6 +59,13 @@ class CoordinateSurface(pygame.Surface):
         #     coordinate = (x_coordinate, y_coordinate)
         #     del self.coordinate_array[coordinate]
         # else:
+        remove_layer = True
+        for key in self.coordinate_array.keys():
+            for ob in self.coordinate_array[key]:
+                if ob.layer == game_object.layer:
+                    remove_layer = False
+        if remove_layer:
+            self.layers.remove(game_object.layer)
         for key in self.coordinate_array.keys():
             if self.coordinate_array[key].count(game_object) > 0:
                 self.coordinate_array[key].remove(game_object)
@@ -140,25 +153,31 @@ class CoordinateSurface(pygame.Surface):
             self.fill((255, 255, 255))
         else:
             self.fill(fill)
-        for key in self.coordinate_array.keys():
-            for game_object in sorted(self.coordinate_array[key], key=lambda ob: ob.layer):
-                if masks is None:
-                    x = self.convert_to_screen_coordinates(self.check_position(game_object))[0]
-                    y = self.convert_to_screen_coordinates(self.check_position(game_object))[1]
-                    game_object.draw(self, self.x_scale, self.y_scale, x, y)
-                else:
-                    draw_object = False
-                    for mask in masks:
-                        if game_object.masks.count(mask) != 0:
-                            draw_object = True
-                    if draw_object:
-                        # game_object.scale(self.x_scale, self.y_scale)
-                        # game_object.rect_draw = game_object.rect_scaled.copy()
-                        x = self.convert_to_screen_coordinates(self.check_position(game_object))[0]
-                        y = self.convert_to_screen_coordinates(self.check_position(game_object))[1]
-                        # Possibly move draw to a separate function
-                        game_object.draw(self, self.x_scale, self.y_scale, x, y)
-                        # self.draw_object(game_object)
+        # for key in self.coordinate_array.keys():
+        #     for game_object in sorted(self.coordinate_array[key], key=lambda ob: ob.layer):
+
+                # print(game_object.layer)
+        for layer in self.layers:
+            for key in self.coordinate_array.keys():
+                for game_object in self.coordinate_array[key]:
+                    if game_object.layer == layer:
+                        if masks is None:
+                            x = self.convert_to_screen_coordinates(self.check_position(game_object))[0]
+                            y = self.convert_to_screen_coordinates(self.check_position(game_object))[1]
+                            game_object.draw(self, self.x_scale, self.y_scale, x, y)
+                        else:
+                            draw_object = False
+                            for mask in masks:
+                                if game_object.masks.count(mask) != 0:
+                                    draw_object = True
+                            if draw_object:
+                                # game_object.scale(self.x_scale, self.y_scale)
+                                # game_object.rect_draw = game_object.rect_scaled.copy()
+                                x = self.convert_to_screen_coordinates(self.check_position(game_object))[0]
+                                y = self.convert_to_screen_coordinates(self.check_position(game_object))[1]
+                                # Possibly move draw to a separate function
+                                game_object.draw(self, self.x_scale, self.y_scale, x, y)
+                                # self.draw_object(game_object)
 
     def tint(self, (r, g, b, a)):
         self.lock()

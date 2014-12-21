@@ -126,8 +126,8 @@ def draw_game():
     global sprite_group, game_surface, gui_surface, screen, scene, current_width, gui
     scene.update('game_surface', masks=['mask1', 'mask2'])
     # game_surface.tint((125, 0, 0, 0))
-    scene.update('gui_surface', masks=['mask2'])
-    gui.update((0, 0, 0, 0), ['gui'])
+    # scene.update('gui_surface', masks=['mask2'])
+    # gui.update((0, 0, 0, 0), ['gui'])
     # game_surface2.fill((125, 125, 125))
     # game_surface.draw()
     # sprite_group.draw(game_surface)
