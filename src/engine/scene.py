@@ -7,17 +7,17 @@ from coordsurface import CoordinateSurface
 class Scene(object):
     coordinate_array = {}
     views = []
-    view_rects = []
+    view_rects = {}
 
     def __init__(self, (scene_width, scene_height)):
         # self.views.append(CoordinateSurface(rect, (view_width, view_height)))
         self.scene_width = scene_width
         self.scene_height = scene_height
 
-    def insert_view(self, surface, (view_x, view_y), view_size=None):
+    def insert_view(self, surface, key, (view_x, view_y), view_size=None):
         if view_size is None:
             view_size = (surface.coordinate_width, surface.coordinate_height)
-        self.views.append(surface)
+        self.views[key] = surface
         self.view_rects.append(pygame.Rect((view_x, view_y), view_size))
 
     def insert_object(self, game_object, (x_coordinate, y_coordinate)):

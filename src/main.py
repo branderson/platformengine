@@ -53,16 +53,17 @@ def main():
 
 def run_game():
     global screen, game_surface, gui_surface, sprite_group, game_ticks, clock, switched, scene, test1, test2, \
-        gui
+        gui, test3
     sprite_group = pygame.sprite.Group()
     game_ticks = 0
 
     # Test code begin
-    test1 = engine.GameObject(RESOURCE_DIR + '124.jpg', masks=['mask1'])
+    test1 = engine.GameObject(RESOURCE_DIR + '124.jpg', 0, masks=['mask1'])
     scene.insert_object(test1, (75, 75))
-    test2 = engine.GameObject(RESOURCE_DIR + '256.jpg', masks=['mask2'])
+    test2 = engine.GameObject(RESOURCE_DIR + '256.jpg', 10, masks=['mask2'])
     scene.insert_object(test2, (175, 75))
-    test3 = engine.GameObject(RESOURCE_DIR + '312.jpg', masks=['gui'])
+    test3 = engine.GameObject(RESOURCE_DIR + '312.jpg', 20, masks=['gui'])
+    test3.add_image(test3.tint(test3.image, (125, 0, 0, 0)), 'red_tint')
     gui.insert_object(test3, (300, 150))
     switched = False
     # Test code end
@@ -123,8 +124,9 @@ def update_logic():
 
 def draw_game():
     global sprite_group, game_surface, gui_surface, screen, scene, current_width, gui
-    scene.update(0, masks=['mask1', 'mask2'])
-    scene.update(1, masks=['mask2'])
+    scene.update(0, masks=['mask1'])
+    # game_surface.tint((125, 0, 0, 0))
+    scene.update(1, masks=['mask2', 'mask1'])
     gui.update((0, 0, 0, 0), ['gui'])
     # game_surface2.fill((125, 125, 125))
     # game_surface.draw()
@@ -136,7 +138,7 @@ def draw_game():
 
 
 def handle_event(event):
-    global screen, game_surface, switched, scene, test1, current_width
+    global screen, game_surface, switched, scene, test1, current_width, test3
     # Quit the game
     if event.type == QUIT:
         pygame.quit()
@@ -146,6 +148,7 @@ def handle_event(event):
     if event.type == KEYUP:
         if event.key == K_q:
             if switched:
+                test3.change_image('image')
                 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
                 scene.update_screen_coordinates((SCREEN_WIDTH/2, SCREEN_HEIGHT), 0)
                 scene.update_screen_coordinates((SCREEN_WIDTH/2, SCREEN_HEIGHT), 1)
@@ -153,6 +156,7 @@ def handle_event(event):
                 current_width = SCREEN_WIDTH
                 switched = False
             else:
+                test3.change_image('red_tint')
                 screen = pygame.display.set_mode((SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
                 scene.update_screen_coordinates((SCREEN_WIDTH/4, SCREEN_HEIGHT/2), 0)
                 scene.update_screen_coordinates((SCREEN_WIDTH/4, SCREEN_HEIGHT/2), 1)

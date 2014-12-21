@@ -141,7 +141,7 @@ class CoordinateSurface(pygame.Surface):
         else:
             self.fill(fill)
         for key in self.coordinate_array.keys():
-            for game_object in self.coordinate_array[key]:
+            for game_object in sorted(self.coordinate_array[key], key=lambda ob: ob.layer):
                 if masks is None:
                     x = self.convert_to_screen_coordinates(self.check_position(game_object))[0]
                     y = self.convert_to_screen_coordinates(self.check_position(game_object))[1]
@@ -159,6 +159,33 @@ class CoordinateSurface(pygame.Surface):
                         # Possibly move draw to a separate function
                         game_object.draw(self, self.x_scale, self.y_scale, x, y)
                         # self.draw_object(game_object)
+
+    def tint(self, (r, g, b, a)):
+        self.lock()
+        for x in range(0, self.get_width() - 1):
+            for y in range(0, self.get_height() - 1):
+                new_r = self.get_at((x, y)).r + r
+                if new_r > 255:
+                    new_r = 255
+                elif new_r < 0:
+                    new_r = 0
+                new_g = self.get_at((x, y)).g + g
+                if new_g > 255:
+                    new_g = 255
+                elif new_g < 0:
+                    new_g = 0
+                new_b = self.get_at((x, y)).b + b
+                if new_b > 255:
+                    new_b = 255
+                elif new_b < 0:
+                    new_b = 0
+                new_a = self.get_at((x, y)).a + a
+                if new_a > 255:
+                    new_a = 255
+                elif new_a < 0:
+                    new_a = 0
+                self.set_at((x, y), (new_r, new_g, new_b, new_a))
+        self.unlock()
 
     def update_screen_coordinates(self, (width, height)):
         pygame.Surface.__init__(self, (width, height), flags=pygame.SRCALPHA | pygame.HWSURFACE)

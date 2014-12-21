@@ -4,10 +4,11 @@ CoordinateSurface
     Append remove_object so that it can remove one at position or remove all at position
     Implement layers by checking if layer is higher or lower than other layers in list. Then draw in order.
         Account for overlap
-    Look into using video memory
-    Definitely need transparency now that I have masks
+        Layers still not working
     Consider integrating insert_object_centered as a flag into insert_object
     A large portion of this might be unnecessary (I may have been able to use subsurfaces)
+    Implemented tint. Unusably slow
+        Need to change tint functionality in coordinate surface to save to return a new surface, like game_objects do
 Scene
     May or may not need scaling on pan_view
     Perhaps make 0 in scene_width/scene_height make the room infinite
