@@ -4,6 +4,7 @@ Dec. 21
     Added rotation about center for objects
     Added flip, surprisingly difficult with rotation correction
     Added center view on object
+    Added animation but not yet tested
 Dec. 20
     Fixed objects not being drawn when moved too far, was checking rect which doesn't change instead of check_position()
     Layers added

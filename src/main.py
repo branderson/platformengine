@@ -70,7 +70,7 @@ def run_game():
     test2 = engine.GameObject(resource_dict.get_images('cat2'), -10, masks=['mask2'])
     scene.insert_object(test2, (175, 75))
     test3 = engine.GameObject(resource_dict.get_images('cat3'), 20, masks=['gui'])
-    test3.add_image(test3.tint(test3.image, (125, 0, 0, 0)), 'red_tint')
+    test3.add_image('red_tint', test3.tint(test3.image, (125, 0, 0, 0)))
     gui.insert_object_centered(test3, (COORDINATE_WIDTH/2, COORDINATE_HEIGHT/2))
     switched = False
     # Test code end

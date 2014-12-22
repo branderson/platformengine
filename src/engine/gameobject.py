@@ -10,6 +10,8 @@ class GameObject(pygame.sprite.Sprite, object):
     flipped_hor = False
     flipped_ver = False
     visible = True
+    current_animation = None
+    animation_frame = 0
     angle = 0  # 0-360 degrees, 0 is right facing
 
     def __init__(self, filename=None, layer=0, masks=None):
@@ -45,7 +47,7 @@ class GameObject(pygame.sprite.Sprite, object):
             while self.masks.remove(mask):
                 pass
 
-    def add_image(self, surface, key):
+    def add_image(self, key, surface):
         self.images[key] = surface
 
     def change_image(self, key):
@@ -56,6 +58,36 @@ class GameObject(pygame.sprite.Sprite, object):
     def remove_image(self, key):
         if key in self.images:
             del self.images[key]
+
+    def add_animation(self, key, image_list):
+        self.images[key] = image_list
+
+    def change_animation_frame(self, key, frame):
+        self.image = self.images[key][frame]
+        self.animation_frame = frame
+        self.current_image = self.images[key][frame]
+        self.rotate(0)
+
+    def set_animation(self, key, starting_frame=0):
+        self.image = self.images[key][starting_frame]
+        self.animation_frame = 0
+        self.current_animation = key
+        self.current_image = self.images[key][starting_frame]
+        self.rotate(0)
+
+    def next_frame(self, direction=1):
+        if direction == -1:
+            self.animation_frame -= 1
+        else:
+            self.animation_frame += 1
+
+        if self.animation_frame != 0 and self.animation_frame < self.images[self.current_animation].__len__():
+            self.image = self.images[self.current_animation][self.animation_frame]
+            self.current_image = self.images[self.current_animation][self.animation_frame]
+            self.rotate(0)
+            return True
+        else:
+            return False
 
     def destroy(self):
         self.__del__()

@@ -6,11 +6,13 @@ CoordinateSurface
     A large portion of this might be unnecessary (I may have been able to use subsurfaces)
     Need to change tint functionality in coordinate surface to save to return a new surface, like game_objects do
     Don't use the same layer for any two objects, results in crazy drawing when they overlap. No real fix probably possible
+    Add zoom function
 Scene
     Perhaps make 0 in scene_width/scene_height make the room infinite
     Collision detection
 GameObject
     Implement animation
+        Should be implemented but needs to be tested
     Add get_center function
 Spritesheet
     Add methods for spacing between sprites, strips that are multiple lines, etc
