@@ -2,13 +2,6 @@ __author__ = 'brad'
 
 import pygame
 
-"""
-The CoordinateSurface is essentially a pygame Surface
-with a builtin secondary coordinate system, which operates
-irrespectively of the screen coordinates. It holds pointers
-to game objects and can manipulate those objects.
-"""
-
 
 class CoordinateSurface(pygame.Surface):
     coordinate_array = {}
@@ -20,6 +13,12 @@ class CoordinateSurface(pygame.Surface):
 
     def __init__(self, rect, (coordinate_width, coordinate_height)):
         # This part should be cleaned up
+        """The CoordinateSurface is essentially a pygame Surface
+        with a builtin secondary coordinate system, which operates
+        irrespectively of the screen coordinates. It holds pointers
+        to game objects and can manipulate those objects.
+        :rtype : CoordinateSurface
+        """
         try:
             pygame.Surface.__init__(self, (rect.width, rect.height), flags=pygame.SRCALPHA | pygame.HWSURFACE)
         except:

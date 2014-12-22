@@ -94,8 +94,8 @@ class GameObject(pygame.sprite.Sprite, object):
         return True
 
     def draw(self, surface, x_scale, y_scale, x, y):
-        rect_scaled = pygame.Rect((x-self.rect.x, y-self.rect.y), (int(self.rect.width*x_scale),
-                                                                   int(self.rect.height*y_scale)))
+        rect_scaled = pygame.Rect((x-self.rect.x*x_scale, y-self.rect.y*y_scale), (int(self.rect.width*x_scale),
+                                                                                   int(self.rect.height*y_scale)))
         surface.blit(pygame.transform.scale(self.image, (int(self.image.get_width()*x_scale),
                                                          int(self.image.get_height()*y_scale))), rect_scaled)
 

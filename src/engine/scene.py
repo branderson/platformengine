@@ -6,6 +6,7 @@ from coordsurface import CoordinateSurface
 
 class Scene(object):
     coordinate_array = {}
+    collision_array = {}
     views = {}
     view_rects = {}
 
@@ -73,9 +74,9 @@ class Scene(object):
         #     del self.coordinate_array[coordinate]
         # else:
         for key in self.coordinate_array.keys():
-            for view in self.views:
-                if view.check_position(game_object) is not None:
-                    view.remove_object(game_object)
+            for view in self.views.keys():
+                if self.views[view].check_position(game_object) is not None:
+                    self.views[view].remove_object(game_object)
             if self.coordinate_array[key].count(game_object) > 0:
                 self.coordinate_array[key].remove(game_object)
                 if self.coordinate_array[key].__len__() == 0:
@@ -95,20 +96,34 @@ class Scene(object):
                     self.views[view_index].remove_object(game_object)
             del self.coordinate_array[key]
 
-    # def check_collision(self, (x_coordinate, y_coordinate)):
-    #     coordinate = (x_coordinate, y_coordinate)
-    #     if coordinate in self.coordinate_array:
-    #         return True
-    #     else:
-    #         return False
+    def check_collision(self, coordinate, game_object=None):
+        """Checks if any object at position, or if game_object at position"""
+        if game_object is None:
+            for rect in self.collision_array.viewitems():
+                if rect.collidepoint(coordinate):
+                    return True
+                else:
+                    return False
+        else:
+            if game_object in self.collision_array:
+                if self.collision_array[game_object].collidepoint(coordinate):
+                    return True
+            return False
 
-    # Returns a list of game objects at position
-    # def check_collision_objects(self, (x_coordinate, y_coordinate)):
-    #     coordinate = (x_coordinate, y_coordinate)
-    #     if coordinate in self.coordinate_array:
-    #         return self.coordinate_array[coordinate]
-    #     else:
-    #         return None
+    def check_collision_objects(self, coordinate):
+        """Returns a list of game objects at position"""
+        object_list = []
+        for game_object in self.collision_array:
+            if self.coordinate_array[game_object].collidepoint(coordinate):
+                object_list.append(game_object)
+        return object_list
+
+    def check_object_collision(self, game_object1, game_object2):
+        """Checks whether two objects collide"""
+        if self.collision_array[game_object1].colliderect(self.collision_array[game_object2]):
+            return True
+        else:
+            return False
 
     def move_object(self, game_object, (x_destination, y_destination)):
         position = self.check_position(game_object)
@@ -144,8 +159,8 @@ class Scene(object):
             for game_object in self.coordinate_array[key]:
                 add_object = False
                 object_rect = pygame.Rect(self.check_position(game_object), (game_object.rect.width,  # *self.views[view_index].x_scale,  #_scaled.width,
-                                                                     game_object.rect.height))  # *self.views[view_index].y_scale))  # _scaled.height))
-
+                                                                             game_object.rect.height))  # *self.views[view_index].y_scale))  # _scaled.height))
+                self.collision_array[game_object] = object_rect
                 if self.view_rects[view_index].colliderect(object_rect):
                     if masks is None:
                         add_object = True
@@ -159,6 +174,14 @@ class Scene(object):
                                                                            self.check_position(game_object)[1] -
                                                                            self.view_rects[view_index].y))
         self.views[view_index].update(fill, masks)
+
+    def update_collisions(self):
+        self.collision_array = {}
+        for key in self.coordinate_array.keys():
+            for game_object in self.coordinate_array[key]:
+                object_rect = pygame.Rect(self.check_position(game_object), (game_object.rect.width,
+                                                                             game_object.rect.height))
+                self.collision_array[game_object] = object_rect
 
     def update_screen_coordinates(self, view_index, (width, height)):
         self.views[view_index].update_screen_coordinates((width, height))

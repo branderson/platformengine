@@ -15,4 +15,4 @@ from scene import Scene
 from state import State
 from gameclock import GameClock
 from gameobject import GameObject
-from resourcedict import ResourceDictionary
+from resourcedict import ResourceManager

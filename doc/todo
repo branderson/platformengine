@@ -1,5 +1,6 @@
 Implement state
     Should probably be a collection of scenes
+    Save and load
 CoordinateSurface
     Append remove_object so that it can remove one at position or remove all at position
     Consider integrating insert_object_centered as a flag into insert_object
@@ -9,7 +10,6 @@ CoordinateSurface
     Add zoom function
 Scene
     Perhaps make 0 in scene_width/scene_height make the room infinite
-    Collision detection
 GameObject
     Implement animation
         Should be implemented but needs to be tested

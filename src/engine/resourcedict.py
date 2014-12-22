@@ -2,7 +2,7 @@ __author__ = 'brad'
 import pygame
 
 
-class ResourceDictionary(object):
+class ResourceManager(object):
     sprites = {}
     sounds = {}
     music = {}
