@@ -68,6 +68,7 @@ class Scene(object):
             self.coordinate_array[coordinate].append(game_object)
         else:
             self.coordinate_array[coordinate] = [game_object]
+        self.update_collisions()
         return True
 
     def insert_object_centered(self, game_object, (x_coordinate, y_coordinate)):
@@ -97,6 +98,7 @@ class Scene(object):
                     game_object.delete()
                 except:
                     pass
+                self.update_collisions()
                 return True
         return False
 
@@ -107,6 +109,7 @@ class Scene(object):
                 if self.views[view_index].checkPosition(game_object) is not None:
                     self.views[view_index].remove_object(game_object)
             del self.coordinate_array[key]
+        self.update_collisions()
 
     def check_collision(self, coordinate, game_object=None):
         """Checks if any object at position, or if game_object at position"""
@@ -148,6 +151,7 @@ class Scene(object):
             self.coordinate_array[position].remove(game_object)
             if self.coordinate_array[position].__len__() == 0:
                 del self.coordinate_array[position]
+            self.update_collisions()
             return True
         else:
             return False
