@@ -1,6 +1,9 @@
 Implement state
     Should probably be a collection of scenes
     Save and load
+    Might want to change scenes to list instead of dict for draw order
+    Add update function, store update values in state
+
 CoordinateSurface
     Append remove_object so that it can remove one at position or remove all at position
     Consider integrating insert_object_centered as a flag into insert_object
@@ -10,13 +13,18 @@ CoordinateSurface
     Add zoom function
 Scene
     Perhaps make 0 in scene_width/scene_height make the room infinite
+    Add a looping toggle to scenes for wrap
 GameObject
     Implement animation
         Should be implemented but needs to be tested
     Add get_center function
+    Find some way to not have to scale every frame, uses lots of CPU
+        Same with rotate
 Spritesheet
     Add methods for spacing between sprites, strips that are multiple lines, etc
 Implement resource dictionaries
     Sprite/spritesheet functionality implemented
-    Change resource dictionary to resource manager
+    Need a way to load fonts at the proper size
+    Don't render fonts a lot
 Update the enginedocs
+Implement dirty rect animation

@@ -10,6 +10,7 @@ class CoordinateSurface(pygame.Surface):
     coordinate_height = 0
     x_scale = 1.
     y_scale = 1.
+    active = True
 
     def __init__(self, rect, (coordinate_width, coordinate_height)):
         # This part should be cleaned up

@@ -18,7 +18,8 @@ USE_WAIT = True
 MAX_FRAME_SKIP = 5
 UPDATE_CALLBACK = None
 FRAME_CALLBACK = None
-CLOCK_SETTINGS = (TICKS_PER_SECOND, MAX_FPS, USE_WAIT, MAX_FRAME_SKIP, UPDATE_CALLBACK, FRAME_CALLBACK, lambda: pygame.time.get_ticks()/1000.)
+CLOCK_SETTINGS = (TICKS_PER_SECOND, MAX_FPS, USE_WAIT, MAX_FRAME_SKIP, UPDATE_CALLBACK, FRAME_CALLBACK,
+                  lambda: pygame.time.get_ticks()/1000.)
 # Mask and string constants
 RESOURCE_DIR = '../resources/'
 GUI_MASK = ['gui']
@@ -26,23 +27,30 @@ GAME_MASK = ['game']
 
 
 def main():
-    global screen, game_surface, gui_surface, clock, scene, current_width, gui, resource_manager
+    global screen, game_state, game_surface1, game_surface2, background_surface, gui_surface, resource_manager, clock, \
+        scene, current_width, player1_start, player2_start, current_state
     pygame.init()
 
     # Set up the window
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    game_surface = engine.CoordinateSurface(pygame.Rect((0, 0), (SCREEN_WIDTH/2, SCREEN_HEIGHT)),
-                                            (COORDINATE_WIDTH/2, COORDINATE_HEIGHT))
+    game_state = engine.State()
+    game_surface1 = engine.CoordinateSurface(pygame.Rect((0, 0),
+                                                         (SCREEN_WIDTH, SCREEN_HEIGHT/2)),
+                                             (COORDINATE_WIDTH, COORDINATE_HEIGHT/2))
+    game_surface2 = engine.CoordinateSurface(pygame.Rect((0, SCREEN_HEIGHT/2),
+                                                         (SCREEN_WIDTH, SCREEN_HEIGHT/2)),
+                                             (COORDINATE_WIDTH, COORDINATE_HEIGHT/2))
+    background_surface = engine.CoordinateSurface(pygame.Rect((0, 0), (SCREEN_WIDTH, SCREEN_HEIGHT)),
+                                                  (COORDINATE_WIDTH, COORDINATE_HEIGHT))
     gui_surface = engine.CoordinateSurface(pygame.Rect((0, 0), (SCREEN_WIDTH/2, SCREEN_HEIGHT)),
                                            (COORDINATE_WIDTH/2, COORDINATE_HEIGHT))
-    gui = engine.CoordinateSurface(pygame.Rect((0, 0), (SCREEN_WIDTH, SCREEN_HEIGHT)),
-                                            (COORDINATE_WIDTH, COORDINATE_HEIGHT))
+    player1_start = (0, 0)
+    player2_start = (300, 0)
     scene = engine.Scene((10000, 10000))
-    scene.insert_view(game_surface, 'game_surface', (0, 0))
-    scene.insert_view(gui_surface, 'gui_surface', (0, 0))
-    screen.blit(game_surface, (0, 0))
-    screen.blit(gui_surface, (SCREEN_WIDTH/2, 0))
-    screen.blit(gui, (0, 0))
+    game_state.add_scene('game', scene)
+    current_state = game_state
+    scene.insert_view(game_surface1, 'player1_view', player1_start, (0, 0), (255, 255, 255, 255))
+    scene.insert_view(game_surface2, 'player2_view', player2_start, (0, SCREEN_HEIGHT/2), (255, 255, 255, 255))
     current_width = 800
 
     # Set up the clock
@@ -53,6 +61,7 @@ def main():
     resource_manager.add_image('cat1', RESOURCE_DIR + '124.jpg')
     resource_manager.add_image('cat2', RESOURCE_DIR + '256.jpg')
     resource_manager.add_image('cat3', RESOURCE_DIR + '312.jpg')
+    resource_manager.add_font('default', None, 12)
 
     while True:
         if not run_game():
@@ -60,21 +69,16 @@ def main():
 
 
 def run_game():
-    global screen, game_surface, gui_surface, sprite_group, game_ticks, clock, switched, scene, test1, test2, \
-        gui, test3, resource_manager
+    global sprite_group, game_ticks, player1, player2
     sprite_group = pygame.sprite.Group()
     game_ticks = 0
 
-    # Test code begin
-    test1 = engine.GameObject(resource_manager.get_images('cat1'), 0, masks=['mask1'])
-    scene.insert_object(test1, (75, 75))
-    test2 = engine.GameObject(resource_manager.get_images('cat2'), -10, masks=['mask2'])
-    scene.insert_object(test2, (175, 75))
-    test3 = engine.GameObject(resource_manager.get_images('cat3'), 20, masks=['gui'])
-    test3.add_image('red_tint', test3.tint(test3.image, (125, 0, 0, 0)))
-    gui.insert_object_centered(test3, (COORDINATE_WIDTH/2, COORDINATE_HEIGHT/2))
-    switched = False
-    # Test code end
+    player1 = engine.GameObject(resource_manager.get_images('cat1'), 0)
+    player2 = engine.GameObject(resource_manager.get_images('cat2'), -10)
+    player3 = engine.GameObject(resource_manager.get_images('cat3'), -100)
+    scene.insert_object_centered(player1, player1_start)
+    scene.insert_object_centered(player2, player2_start)
+    scene.insert_object_centered(player3, (COORDINATE_WIDTH/2, COORDINATE_HEIGHT/2))
 
     # Game loop
     while True:
@@ -82,14 +86,13 @@ def run_game():
         if clock.update_ready:
             update_clock()
             update_logic()
-            game_surface.update_objects()
 
         if clock.frame_ready:
             # Draw functions
             draw_game()
 
             # Update display
-            pygame.display.update()
+            pygame.display.flip()
 
         # Event handling
         for event in pygame.event.get():
@@ -111,85 +114,59 @@ def update_clock():
 
 
 def update_logic():
-    global scene, test1, test2, test3
-    scene.update_collisions()
-    if scene.check_object_collision(test1, test2):
-        scene.increment_object(test2, (1, 1))
+    current_state.update_collisions()
+    if scene.check_object_collision(player1, player2):
+        pygame.quit()
+        sys.exit()
     key = pygame.key.get_pressed()
     if key[K_a]:
-        scene.pan_view('game_surface', (3, 0))
+        player1.rotate(3)
     if key[K_d]:
-        scene.pan_view('game_surface', (-3, 0))
+        player1.rotate(-3)
     if key[K_s]:
-        scene.pan_view('game_surface', (0, -3))
+        scene.increment_object_radial(player1, -3)
     if key[K_w]:
-        scene.pan_view('game_surface', (0, 3))
+        scene.increment_object_radial(player1, 3)
     if key[K_LEFT]:
-        scene.increment_object(test1, (-3, 0))
+        player2.rotate(3)
     if key[K_RIGHT]:
-        scene.increment_object(test1, (3, 0))
+        player2.rotate(-3)
     if key[K_UP]:
-        scene.increment_object(test1, (0, -3))
+        scene.increment_object_radial(player2, 3)
     if key[K_DOWN]:
-        scene.increment_object(test1, (0, 3))
-    if key[K_r]:
-        test3.rotate(3)
-        # test3.rotate(test3.current_image, 3)
-    if key[K_g]:
-        test3.angle = 0
-        test3.rotate(0)
+        scene.increment_object_radial(player2, -3)
 
 
 def draw_game():
-    global sprite_group, game_surface, gui_surface, screen, scene, current_width, gui
-    screen.fill((255, 255, 255, 255))
-    scene.update('game_surface', fill=(0, 0, 0, 0), masks=['mask1', 'mask2'])
-    # game_surface.tint((125, 0, 0, 0))
-    scene.center_view_on_object('gui_surface', test1)
-    scene.update('gui_surface', fill=(0, 0, 0, 0), masks=['mask1', 'mask2'])
-    gui.update((0, 0, 0, 0), ['gui'])
-    # game_surface2.fill((125, 125, 125))
-    # game_surface.draw()
-    # sprite_group.draw(game_surface)
-    screen.blit(gui, (0, 0))
-    screen.blit(game_surface, (0, 0))
-    screen.blit(gui_surface, (current_width/2, 0))
+    scene.center_view_on_object('player1_view', player1)
+    scene.center_view_on_object('player2_view', player2)
+    current_state.update()
+    background_surface.update((0, 0, 0, 255))
+    gui_surface.update((0, 0, 0, 0))
+    screen.blit(background_surface, (0, 0))
+    for scene_key in current_state.scenes.keys():  # Draws each scene in the current state to the screen
+        if current_state.scenes[scene_key].active:
+            for surface_key in current_state.scenes[scene_key].views.keys():
+                surface = current_state.scenes[scene_key].views[surface_key]
+                if surface.active:
+                    screen.blit(surface, current_state.scenes[scene_key].view_draw_positions[surface_key])
+    screen.blit(gui_surface, (0, 0))
+    pygame.draw.line(screen, (0, 0, 0, 255), (0, SCREEN_HEIGHT/2), (SCREEN_WIDTH, SCREEN_HEIGHT/2))
     return
 
 
 def handle_event(event):
-    global screen, game_surface, switched, scene, test1, current_width, test3
     # Quit the game
     if event.type == QUIT:
         pygame.quit()
         sys.exit()
-
-    # Test code begin
-    if event.type == KEYUP:
-        if event.key == K_q:
-            if switched:
-                test3.change_image('image')
-                screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-                scene.update_screen_coordinates('game_surface', (SCREEN_WIDTH/2, SCREEN_HEIGHT))
-                scene.update_screen_coordinates('gui_surface', (SCREEN_WIDTH/2, SCREEN_HEIGHT))
-                gui.update_screen_coordinates((SCREEN_WIDTH, SCREEN_HEIGHT))
-                current_width = SCREEN_WIDTH
-                switched = False
-            else:
-                test3.change_image('red_tint')
-                screen = pygame.display.set_mode((SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-                scene.update_screen_coordinates('game_surface', (SCREEN_WIDTH/4, SCREEN_HEIGHT/2))
-                scene.update_screen_coordinates('gui_surface', (SCREEN_WIDTH/4, SCREEN_HEIGHT/2))
-                gui.update_screen_coordinates((SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-                # scene.remove_object(test1)
-                current_width = SCREEN_WIDTH/2
-                switched = True
-        elif event.key == K_f:
-            test3.flip(1, 0)
-        elif event.key == K_t:
-            test3.rotate(45)
-    # Test code end
     return
+
+
+def terminate():
+    pygame.quit()
+    sys.exit()
+
 
 if __name__ == '__main__':
     main()

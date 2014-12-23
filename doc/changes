@@ -1,6 +1,10 @@
 Dec. 22
     Fixed rotation bug when changing screen size
     Added collision detection!
+    Added states
+    Added collision rects for game objects
+    Added functions for updating and drawing all scenes in a state
+    Added radial movement for game objects
 Dec. 21
     Added GameObject visibility toggle
     Added absolute movement for views

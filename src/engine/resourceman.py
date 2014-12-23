@@ -9,7 +9,7 @@ class ResourceManager(object):
     fonts = {}
 
     def __init__(self):
-        pass
+        pygame.font.init()
 
     def add_image(self, key, filename):
         try:
@@ -40,3 +40,9 @@ class ResourceManager(object):
 
     def get_images(self, key):
         return self.sprites[key]
+
+    def add_font(self, key, filename, size):
+        self.fonts[key] = pygame.font.Font(filename, size)
+
+    def remove_font(self, key):
+        del self.fonts[key]

@@ -14,7 +14,7 @@ class GameObject(pygame.sprite.Sprite, object):
     animation_frame = 0
     angle = 0  # 0-360 degrees, 0 is right facing
 
-    def __init__(self, filename=None, layer=0, masks=None):
+    def __init__(self, filename=None, layer=0, masks=None, collision_rect=None, angle=0):
         pygame.sprite.Sprite.__init__(self)
 
         if filename is None:
@@ -27,14 +27,19 @@ class GameObject(pygame.sprite.Sprite, object):
             # except:
             #     self.image = pygame.Surface((0, 0))
             #     print("The image failed to load")
+        if collision_rect is None:
+            collision_rect = self.image.get_rect()
         self.rect = self.image.get_rect()
         self.image_scaled = None
         self.rect_scaled = self.image.get_rect()
+        self.collision_rect = collision_rect
         self.rect_draw = self.image.get_rect()
         self.layer = layer
         self.masks = []
         self.images['image'] = self.image
         self.current_image = self.images['image']
+        self.angle = angle
+        self.rotate(0)
         if masks is not None:
             for mask in masks:
                 self.add_mask(mask)

@@ -1,6 +1,7 @@
 __author__ = 'brad'
 
 import pygame
+import math
 from coordsurface import CoordinateSurface
 
 
@@ -9,22 +10,33 @@ class Scene(object):
     collision_array = {}
     views = {}
     view_rects = {}
+    view_draw_positions = {}
+    view_update_values = {}
+    active = True
 
     def __init__(self, (scene_width, scene_height)):
         # self.views.append(CoordinateSurface(rect, (view_width, view_height)))
         self.scene_width = scene_width
         self.scene_height = scene_height
 
-    def insert_view(self, surface, key, (view_x, view_y), view_size=None):
+    def insert_view(self, surface, key, (view_x, view_y), view_draw_position=None, fill=None, masks=None,
+                    view_size=None):
         if view_size is None:
             view_size = (surface.coordinate_width, surface.coordinate_height)
         self.views[key] = surface
         self.view_rects[key] = pygame.Rect((view_x, view_y), view_size)
+        if view_draw_position is None:
+            self.view_draw_positions[key] = (0, 0)
+        else:
+            self.view_draw_positions[key] = view_draw_position
+        self.view_update_values[key] = (fill, masks)
 
     def remove_view(self, key):
         if key in self.views:
             del self.views[key]
             del self.view_rects[key]
+            del self.view_draw_positions[key]
+            del self.view_update_values[key]
 
     def pan_view(self, view_index, (x_increment, y_increment)):
         # May or may not need the scales here. Further testing is required
@@ -147,6 +159,14 @@ class Scene(object):
         else:
             return False
 
+    def increment_object_radial(self, game_object, increment):
+        x_increment = math.cos(math.radians(game_object.angle))*increment
+        y_increment = math.sin(math.radians(game_object.angle))*increment
+        if self.increment_object(game_object, (x_increment, y_increment)):
+            return True
+        else:
+            return False
+
     def check_position(self, game_object):
         for key in self.coordinate_array.keys():
             if self.coordinate_array[key].count(game_object) > 0:
@@ -179,9 +199,12 @@ class Scene(object):
         self.collision_array = {}
         for key in self.coordinate_array.keys():
             for game_object in self.coordinate_array[key]:
-                object_rect = pygame.Rect(self.check_position(game_object), (game_object.rect.width,
-                                                                             game_object.rect.height))
-                self.collision_array[game_object] = object_rect
+                collide_rect = pygame.Rect((self.check_position(game_object)[0] + game_object.rect.width/2 -
+                                            game_object.collision_rect.width/2, self.check_position(game_object)[1] +
+                                            game_object.rect.height/2 - game_object.collision_rect.height/2),
+                                           (game_object.collision_rect.width,
+                                            game_object.collision_rect.height))
+                self.collision_array[game_object] = collide_rect
 
     def update_screen_coordinates(self, view_index, (width, height)):
         self.views[view_index].update_screen_coordinates((width, height))
