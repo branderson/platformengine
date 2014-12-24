@@ -5,21 +5,13 @@ import math
 
 class GameObject(pygame.sprite.Sprite, object):
 
-    def __init__(self, filename=None, layer=0, masks=None, collision_rect=None, angle=0):
+    def __init__(self, image=None, layer=0, masks=None, collision_rect=None, angle=0):
         pygame.sprite.Sprite.__init__(self)
-
-        if filename is None:
+        self.images = {}
+        if image is None:
             self.image = pygame.Surface((0, 0))
         else:
-            self.image = filename
-            # Figure out how to check if it's an image
-            # try:
-            #     self.image = pygame.image.load(filename).convert_alpha()
-            # except:
-            #     self.image = pygame.Surface((0, 0))
-            #     print("The image failed to load")
-        self.images = {}
-        self.current_image = None
+            self.image = image
         self.flipped_hor = False
         self.flipped_ver = False
         self.visible = True
@@ -97,18 +89,20 @@ class GameObject(pygame.sprite.Sprite, object):
         return True
 
     def width(self):
-        return self.rect.width()
+        return self.rect.width
 
     def height(self):
-        return self.rect.height()
+        return self.rect.height
 
     def draw(self, surface, x_scale, y_scale, x, y):
+        # TODO: May need to change image to current_image. Also go through and make sure using right image consistently
         rect_scaled = pygame.Rect((x-self.rect.x*x_scale, y-self.rect.y*y_scale), (int(self.rect.width*x_scale),
                                                                                    int(self.rect.height*y_scale)))
         surface.blit(pygame.transform.scale(self.image, (int(self.image.get_width()*x_scale),
                                                          int(self.image.get_height()*y_scale))), rect_scaled)
 
     # def scale(self, x_scale, y_scale):
+    # TODO: Implement GameObject.scale()
     #     self.image_scaled = pygame.transform.scale(self.image, (int(self.image.get_width()*x_scale),
     #                                                             int(self.image.get_height()*y_scale)))
     #     # self.rect_scaled.inflate_ip(-x_scale, -y_scale)

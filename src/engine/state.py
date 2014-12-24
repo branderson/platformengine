@@ -3,7 +3,6 @@ __author__ = 'brad'
 
 class State(object):
     def __init__(self):
-        self.state = 0
         self.scenes = {}
 
     # def __del__(self):

@@ -20,6 +20,7 @@ GameObject
     Find some way to not have to scale every frame, uses lots of CPU
         Same with rotate
     Add easy way to store text in objects
+    Tint will be infinitely faster if done by creating a colored surface and blitting it to the objects image.
 Spritesheet
     Add methods for spacing between sprites, strips that are multiple lines, etc
 Implement resource dictionaries
@@ -27,6 +28,7 @@ Implement resource dictionaries
     Need a way to load fonts at the proper size
     Don't render fonts a lot
 Update the enginedocs
+    Append if active stuff to them
 Implement dirty rect animation
     May not be feasible due to abstraction of views/scrolling inherent to engine
 Look into possibly using cairo for final drawing
