@@ -4,15 +4,6 @@ import math
 
 
 class GameObject(pygame.sprite.Sprite, object):
-    layer = 0
-    images = {}
-    current_image = None
-    flipped_hor = False
-    flipped_ver = False
-    visible = True
-    current_animation = None
-    animation_frame = 0
-    angle = 0  # 0-360 degrees, 0 is right facing
 
     def __init__(self, filename=None, layer=0, masks=None, collision_rect=None, angle=0):
         pygame.sprite.Sprite.__init__(self)
@@ -27,6 +18,13 @@ class GameObject(pygame.sprite.Sprite, object):
             # except:
             #     self.image = pygame.Surface((0, 0))
             #     print("The image failed to load")
+        self.images = {}
+        self.current_image = None
+        self.flipped_hor = False
+        self.flipped_ver = False
+        self.visible = True
+        self.current_animation = None
+        self.animation_frame = 0
         if collision_rect is None:
             collision_rect = self.image.get_rect()
         self.rect = self.image.get_rect()
@@ -97,6 +95,12 @@ class GameObject(pygame.sprite.Sprite, object):
     def destroy(self):
         self.__del__()
         return True
+
+    def width(self):
+        return self.rect.width()
+
+    def height(self):
+        return self.rect.height()
 
     def draw(self, surface, x_scale, y_scale, x, y):
         rect_scaled = pygame.Rect((x-self.rect.x*x_scale, y-self.rect.y*y_scale), (int(self.rect.width*x_scale),

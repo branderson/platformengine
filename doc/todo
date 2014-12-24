@@ -19,6 +19,7 @@ GameObject
     Add scale function
     Find some way to not have to scale every frame, uses lots of CPU
         Same with rotate
+    Add easy way to store text in objects
 Spritesheet
     Add methods for spacing between sprites, strips that are multiple lines, etc
 Implement resource dictionaries

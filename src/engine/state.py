@@ -2,11 +2,9 @@ __author__ = 'brad'
 
 
 class State(object):
-    state = 0
-    scenes = {}
-
     def __init__(self):
-        return None
+        self.state = 0
+        self.scenes = {}
 
     # def __del__(self):
     #     for key in self.scenes.keys():
@@ -18,6 +16,9 @@ class State(object):
 
     def remove_scene(self, key):
         del self.scenes[key]
+
+    def clear(self):
+        self.scenes = {}
 
     def update(self):
         for scene in self.scenes.keys():

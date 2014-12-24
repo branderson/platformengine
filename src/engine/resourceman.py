@@ -3,13 +3,12 @@ import pygame
 
 
 class ResourceManager(object):
-    sprites = {}
-    sounds = {}
-    music = {}
-    fonts = {}
-
     def __init__(self):
         pygame.font.init()
+        self.sprites = {}
+        self.sounds = {}
+        self.music = {}
+        self.fonts = {}
 
     def add_image(self, key, filename):
         try:

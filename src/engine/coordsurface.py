@@ -4,13 +4,6 @@ import pygame
 
 
 class CoordinateSurface(pygame.Surface):
-    coordinate_array = {}
-    layers = []
-    coordinate_width = 0
-    coordinate_height = 0
-    x_scale = 1.
-    y_scale = 1.
-    active = True
 
     def __init__(self, rect, (coordinate_width, coordinate_height)):
         # This part should be cleaned up
@@ -24,7 +17,13 @@ class CoordinateSurface(pygame.Surface):
             pygame.Surface.__init__(self, (rect.width, rect.height), flags=pygame.SRCALPHA | pygame.HWSURFACE)
         except:
             pygame.Surface.__init__(self, (rect[0], rect[1]), flags=pygame.SRCALPHA | pygame.HWSURFACE)
-
+        self.coordinate_array = {}
+        self.layers = []
+        self.coordinate_width = 0
+        self.coordinate_height = 0
+        self.x_scale = 1.
+        self.y_scale = 1.
+        self.active = True
         self.coordinate_width = coordinate_width
         self.coordinate_height = coordinate_height
         self.x_scale = self.get_width()/float(coordinate_width)

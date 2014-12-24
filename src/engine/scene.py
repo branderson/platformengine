@@ -6,15 +6,14 @@ from coordsurface import CoordinateSurface
 
 
 class Scene(object):
-    coordinate_array = {}
-    collision_array = {}
-    views = {}
-    view_rects = {}
-    view_draw_positions = {}
-    view_update_values = {}
-    active = True
-
     def __init__(self, (scene_width, scene_height)):
+        self.coordinate_array = {}
+        self.collision_array = {}
+        self.views = {}
+        self.view_rects = {}
+        self.view_draw_positions = {}
+        self.view_update_values = {}
+        self.active = True
         # self.views.append(CoordinateSurface(rect, (view_width, view_height)))
         self.scene_width = scene_width
         self.scene_height = scene_height

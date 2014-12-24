@@ -1,3 +1,5 @@
+Dec. 23
+    Fixed states and other objects sharing properties between members of a class
 Dec. 22
     Fixed rotation bug when changing screen size
     Added collision detection!
